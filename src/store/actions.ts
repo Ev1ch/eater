@@ -1,4 +1,6 @@
 import { createAction } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
 
-export const hydrate = createAction(HYDRATE);
+import type { State } from './types';
+
+export const hydrate = createAction<State>(HYDRATE);
