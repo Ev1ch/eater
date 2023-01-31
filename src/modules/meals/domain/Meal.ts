@@ -1,4 +1,11 @@
+import type { Ingredient, Amount } from '#/ingredients/domain';
+
 import type Tag from './Tag';
+
+export interface MealIngredient {
+  amount: Amount;
+  ingredient: Ingredient;
+}
 
 export default interface Meal {
   id: string;
@@ -7,5 +14,6 @@ export default interface Meal {
   area: string;
   instructions: string;
   image: string;
+  ingredients: MealIngredient[];
   tags: Tag[];
 }
