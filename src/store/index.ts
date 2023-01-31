@@ -3,11 +3,15 @@ import { createWrapper } from 'next-redux-wrapper';
 
 import environment from '@/environment/client';
 import uiReducer from '#/ui/slice';
+import mealsReducer from '@/modules/meals/slice';
+import fridgeReducer from '@/modules/fridge/slice';
 
 export const createStore = () =>
   configureStore({
     reducer: {
       ui: uiReducer,
+      meals: mealsReducer,
+      fridge: fridgeReducer,
     },
     devTools: environment.isDevelopment,
   });

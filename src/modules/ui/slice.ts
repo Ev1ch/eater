@@ -6,7 +6,7 @@ import {
   type PayloadAction,
 } from '@reduxjs/toolkit';
 
-import type { State } from '@/store/types';
+import type { State } from '@/store/abstracts';
 import { getActionRootType } from '@/store/utils';
 import { ThemeMode } from '@/styles/types';
 
