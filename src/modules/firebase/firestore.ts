@@ -34,4 +34,7 @@ export {
   collection,
   setDoc,
   deleteDoc,
+  limit,
+  startAt,
+  endAt,
 } from 'firebase/firestore';
