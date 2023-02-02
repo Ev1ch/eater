@@ -5,9 +5,9 @@ import {
 } from '@reduxjs/toolkit';
 
 import { serialize } from '#/errors/utils';
-import type { ThunkOptions } from '../types';
+import type { ThunkOptions } from '../abstracts';
 
-const createAsyncThunk = <Returned = void, Argument = void>(
+const createAsyncThunk = <Argument = void, Returned = void>(
   typePrefix: string,
   payloadCreator: AsyncThunkPayloadCreator<Returned, Argument, ThunkOptions>,
   options?: AsyncThunkOptions<Argument, ThunkOptions>,

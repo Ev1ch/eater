@@ -17,7 +17,15 @@
     "react/require-default-props": "off",
     "operator-linebreak": "off",
     "no-restricted-exports": "off",
-    "object-curly-newline": "off"
+    "object-curly-newline": "off",
+    "class-methods-use-this": "off",
+    "no-param-reassign": [
+      "error",
+      {
+        "props": true,
+        "ignorePropertyModificationsFor": ["state"]
+      }
+    ]
   },
   "overrides": [
     {

@@ -1,1 +1,1 @@
-export * from '@mui/icons-material';
+export { Public } from '@mui/icons-material';
