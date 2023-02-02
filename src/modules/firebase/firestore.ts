@@ -33,4 +33,5 @@ export {
   where,
   collection,
   setDoc,
+  deleteDoc,
 } from 'firebase/firestore';
