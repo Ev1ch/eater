@@ -2,15 +2,15 @@ import { configureStore } from '@reduxjs/toolkit';
 import { createWrapper } from 'next-redux-wrapper';
 
 import environment from '@/environment/client';
+import fridgeReducer from '#/fridge/slice';
 import uiReducer from '#/ui/slice';
-import mealsReducer from '@/modules/meals/slice';
-import fridgeReducer from '@/modules/fridge/slice';
+// import mealsReducer from '#/meals/slice';
 
 export const createStore = () =>
   configureStore({
     reducer: {
       ui: uiReducer,
-      meals: mealsReducer,
+      // meals: mealsReducer,
       fridge: fridgeReducer,
     },
     devTools: environment.isDevelopment,
