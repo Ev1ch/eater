@@ -8,6 +8,7 @@ import {
   INGREDIENTS_COLLECTION,
   INGREDIENT_TYPES_COLLECTION,
   MEALS_COLLECTION,
+  TAGS_COLLECTION,
 } from './constants';
 
 const firestore = getFirestore(app);
@@ -19,6 +20,8 @@ export const ingredientsCollection = collection(firestore, INGREDIENTS_COLLECTIO
 export const ingredientTypesCollection = collection(firestore, INGREDIENT_TYPES_COLLECTION);
 
 export const areasCollection = collection(firestore, AREAS_COLLECTION);
+
+export const tagsCollection = collection(firestore, TAGS_COLLECTION);
 
 export const categoriesCollection = collection(firestore, CATEGORIES_COLLECTION);
 
