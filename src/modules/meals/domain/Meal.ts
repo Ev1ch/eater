@@ -1,19 +1,18 @@
 import type { Ingredient, Amount } from '#/ingredients/domain';
 import type { Area } from '@/modules/areas/domain';
 import type { Category } from '@/modules/categories/domain';
-import type Tag from './Tag';
+import type { Tag } from '@/modules/tags/domain';
 
 export interface MealIngredient {
-  id: string;
   amount: Amount;
   ingredient: Ingredient;
 }
 
-interface MealBase {
+export interface MealBase {
   id: string;
   name: string;
-  instructions: string;
-  image: string;
+  instructions: string[];
+  image?: string;
 }
 
 export interface NormalizedMeal extends MealBase {

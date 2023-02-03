@@ -1,22 +1,23 @@
 import { mealsCollection, getDocs } from '#/firebase/firestore';
 import { getAreaByRef } from '@/modules/areas/service';
 import { getCategoryByRef } from '@/modules/categories/service';
-import { Amount } from '@/modules/ingredients/domain';
+import { FirestoreMeal } from '@/modules/firebase/types';
+import { IngredientReference } from '@/modules/firebase/types/ingredients';
 import { getIngredientByRef } from '@/modules/ingredients/service';
+import { Tag } from '@/modules/tags/domain';
 import { getTagByRef } from '@/modules/tags/service';
-import { DocumentData, DocumentReference } from 'firebase/firestore';
-import { MealIngredient, Tag } from '../domain';
+import { DocumentReference } from 'firebase/firestore';
+import { Meal, MealIngredient } from '../domain';
 
-interface IngredientReference {
-  amount: Amount,
-  ingridientRef: DocumentReference
-}
-
-const getMeals = async () => {
+const getMeals = async (): Promise<Meal[]> => {
   const snapshot = await getDocs(mealsCollection);
-  const meals: DocumentData[] = [];
+  const meals: FirestoreMeal[] = [];
 
-  snapshot.forEach((s) => meals.push(s.data()));
+  snapshot.forEach((s) => {
+    const data = s.data() as FirestoreMeal;
+
+    meals.push(data);
+  });
 
   return Promise.all(meals.map(async (m) => {
     const area = await getAreaByRef(m.areaRef);
@@ -33,7 +34,10 @@ const getMeals = async () => {
     ));
 
     return {
-      ...m,
+      id: m.id,
+      name: m.name,
+      instructions: m.instructions,
+      image: m.image,
       area,
       category,
       tags,
