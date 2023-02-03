@@ -13,6 +13,7 @@ export interface MealBase {
   name: string;
   instructions: string[];
   image?: string;
+  creatorId?: string;
 }
 
 export interface NormalizedMeal extends MealBase {
