@@ -1,28 +1,12 @@
 import { mealsCollection, getDocs } from '#/firebase/firestore';
 import { getAreaByRef } from '@/modules/areas/service';
 import { getCategoryByRef } from '@/modules/categories/service';
-import { Amount } from '@/modules/ingredients/domain';
+import { FirestoreMeal, IngredientReference } from '@/modules/firebase/types';
 import { getIngredientByRef } from '@/modules/ingredients/service';
 import { Tag } from '@/modules/tags/domain';
 import { getTagByRef } from '@/modules/tags/service';
-import { DocumentData, DocumentReference } from 'firebase/firestore';
+import { DocumentReference } from 'firebase/firestore';
 import { Meal, MealIngredient } from '../domain';
-
-interface IngredientReference {
-  amount: Amount,
-  ingridientRef: DocumentReference
-}
-
-interface FirestoreMeal extends DocumentData {
-  id : string;
-  name : string;
-  instructions : string[];
-  image?: string;
-  areaRef : DocumentReference;
-  categoryRef : DocumentReference;
-  tags : DocumentReference[];
-  ingridients : IngredientReference[];
-}
 
 const getMeals = async (): Promise<Meal[]> => {
   const snapshot = await getDocs(mealsCollection);
