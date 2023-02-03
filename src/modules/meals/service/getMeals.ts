@@ -1,16 +1,16 @@
-import { DocumentReference } from 'firebase/firestore';
+import type { DocumentReference } from 'firebase/firestore';
 
-import { mealsCollection, getDocs } from '#/firebase/firestore';
 import { getAreaByRef } from '#/areas/service';
 import { getCategoryByRef } from '#/categories/service';
-import type { FirestoreMeal } from '#/meals/abstracts';
+import { getDocs, mealsCollection } from '#/firebase/firestore';
 import type { IngredientReference } from '#/ingredients/abstracts';
 import { getIngredientByRef } from '#/ingredients/service';
+import type { FirestoreMeal, GetMeals } from '#/meals/abstracts';
 import type { Tag } from '#/tags/domain';
 import { getTagByRef } from '#/tags/service';
-import type { Meal, MealIngredient } from '../domain';
+import type { MealIngredient } from '../domain';
 
-const getMeals = async (): Promise<Meal[]> => {
+const getMeals: GetMeals = async () => {
   const snapshot = await getDocs(mealsCollection);
   const meals: FirestoreMeal[] = [];
 
