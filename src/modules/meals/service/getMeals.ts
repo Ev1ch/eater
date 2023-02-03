@@ -1,7 +1,8 @@
 import { mealsCollection, getDocs } from '#/firebase/firestore';
 import { getAreaByRef } from '@/modules/areas/service';
 import { getCategoryByRef } from '@/modules/categories/service';
-import { FirestoreMeal, IngredientReference } from '@/modules/firebase/types';
+import { FirestoreMeal } from '@/modules/firebase/types';
+import { IngredientReference } from '@/modules/firebase/types/ingredients';
 import { getIngredientByRef } from '@/modules/ingredients/service';
 import { Tag } from '@/modules/tags/domain';
 import { getTagByRef } from '@/modules/tags/service';

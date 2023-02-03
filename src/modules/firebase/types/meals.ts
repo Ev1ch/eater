@@ -1,5 +1,5 @@
 import { type DocumentData, type DocumentReference } from 'firebase/firestore';
-import { Amount } from '../../ingredients/domain';
+import { IngredientReference } from './ingredients';
 
 export interface FirestoreMeal extends DocumentData {
   id : string;
@@ -10,8 +10,4 @@ export interface FirestoreMeal extends DocumentData {
   categoryRef : DocumentReference;
   tags : DocumentReference[];
   ingridients : IngredientReference[];
-}
-export interface IngredientReference {
-  amount: Amount,
-  ingridientRef: DocumentReference
 }
