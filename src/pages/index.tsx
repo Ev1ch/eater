@@ -2,7 +2,6 @@ import { useTranslation } from '#/localization/hooks';
 
 import wrapper from '@/store';
 import { getT } from '#/localization/utils';
-import '@/environment/server';
 import '@/environment/client';
 
 export default function Home() {
