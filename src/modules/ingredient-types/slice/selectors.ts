@@ -1,7 +1,8 @@
 import type { State } from '@/store/abstracts';
 
-export const selectCategories = (state: State) => state.categories.entities;
+export const selectIngredientTypes = (state: State) => state.ingredientTypes.entities;
 
-export const selectCategoriesOptions = (state: State) => state.categories.options;
+export const selectIngredientTypesOptions = (state: State) => state.ingredientTypes.options;
 
-export const selectCategoryById = (state: State, id: string) => selectCategories(state)[id];
+export const selectIngredientTypeById = (state: State, id: string) =>
+  selectIngredientTypes(state)[id];
