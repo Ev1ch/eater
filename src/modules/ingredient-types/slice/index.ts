@@ -53,7 +53,7 @@ const slice = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(hydrate, (state, { payload }) => {
-      state.entities = payload.categories.entities;
+      state.entities = payload.ingredientTypes.entities;
     });
     builder.addMatcher(isFulfilled(getIngredientTypes), (state, { payload }) => {
       const {
