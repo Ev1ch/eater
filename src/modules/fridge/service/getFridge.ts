@@ -1,9 +1,12 @@
 import { fridgesCollection, getDocs, query, where } from '#/firebase/firestore';
 import { getCurrentUser } from '#/user/service';
+import { IngredientReference } from '@/modules/ingredients/abstracts';
+import { getIngredientByRef } from '@/modules/ingredients/service';
+import { MealIngredient } from '@/modules/meals/domain';
+import { GetOwnFridge } from '../abstracts/Service';
 import type { Fridge } from '../domain';
-import getIngredientsSubcollection from './getIngredientsSubcollection';
 
-const getFridge = async () => {
+const getFridge: GetOwnFridge = async () => {
   const currentUser = await getCurrentUser();
 
   if (!currentUser) {
@@ -18,9 +21,12 @@ const getFridge = async () => {
   }
 
   const fridge = snapshot.docs[0].data();
-  const subcollection = await getIngredientsSubcollection(fridge.id);
-  const ingredientsSnapshot = await getDocs(subcollection);
-  const ingredients = ingredientsSnapshot.forEach((doc) => doc.data());
+  const ingredients: MealIngredient[] = await Promise.all(
+    fridge.ingridients.map(async (ingredient: IngredientReference) => ({
+      ...ingredient,
+      ingredient: await getIngredientByRef(ingredient.ingridientRef),
+    })),
+  );
   fridge.ingredients = ingredients;
 
   return fridge as Fridge;

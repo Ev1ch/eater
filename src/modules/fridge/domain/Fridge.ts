@@ -6,9 +6,9 @@ export interface FridgeBase {
 }
 
 export default interface Fridge extends FridgeBase {
-  content: MealIngredient[];
+  ingredients: MealIngredient[];
 }
 
 export interface NormalizedFridge extends FridgeBase {
-  content: NormalizedMealIngredient[];
+  ingredients: NormalizedMealIngredient[];
 }
