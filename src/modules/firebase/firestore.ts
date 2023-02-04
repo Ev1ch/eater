@@ -46,4 +46,5 @@ export {
   DocumentReference,
   endAt,
   arrayUnion,
+  arrayRemove,
 } from 'firebase/firestore';

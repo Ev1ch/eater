@@ -11,9 +11,7 @@ const getIngredientById: GetIngredientById = async (id: string) => {
   }
 
   const data = snapshot.data();
-  data.type = await getIngredientTypeByRef(data.ingridientTypeRef);
-
-  delete data.ingridientTypeRef;
+  data.type = await getIngredientTypeByRef(data.ingredientTypeRef);
 
   return data as Ingredient;
 };

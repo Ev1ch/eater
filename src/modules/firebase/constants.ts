@@ -1,8 +1,8 @@
 export const MEALS_COLLECTION = 'meals';
 
-export const INGREDIENTS_COLLECTION = 'ingridients';
+export const INGREDIENTS_COLLECTION = 'ingredients';
 
-export const INGREDIENT_TYPES_COLLECTION = 'ingridientTypes';
+export const INGREDIENT_TYPES_COLLECTION = 'ingredientTypes';
 
 export const FRIDGES_COLLECTION = 'fridges';
 

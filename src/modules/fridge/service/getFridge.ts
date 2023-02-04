@@ -12,13 +12,13 @@ const getFridge: GetOwnFridge = async () => {
   const fridge = {
     id: data.id,
     userId: data.userId,
-    ingredients: data.ingridients,
+    ingredients: data.ingredients,
   };
   const ingredients: MealIngredient[] = await Promise.all(
     fridge.ingredients.map(async (ingredient: IngredientReference) => ({
       id: ingredient.id,
       amount: ingredient.amount,
-      ingredient: await getIngredientByRef(ingredient.ingridientRef),
+      ingredient: await getIngredientByRef(ingredient.ingredientRef),
     })),
   );
   fridge.ingredients = ingredients;

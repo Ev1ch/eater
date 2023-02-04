@@ -4,5 +4,5 @@ import { type DocumentReference } from 'firebase/firestore';
 export default interface IngredientReference {
   amount: Amount;
   id: string;
-  ingridientRef: DocumentReference;
+  ingredientRef: DocumentReference;
 }

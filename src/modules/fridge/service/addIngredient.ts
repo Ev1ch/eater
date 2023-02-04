@@ -16,11 +16,11 @@ const addIngredient: AddFridgeIngredient = async (ingredientToAdd: Omit<Normaliz
   const newIngredient = {
     id: ingredientId,
     amount: ingredientToAdd.amount,
-    ingridientRef: ingredientRef,
+    ingredientRef,
   };
 
   await updateDoc(fridgeRef, {
-    ingridients: arrayUnion(newIngredient),
+    ingredients: arrayUnion(newIngredient),
   });
 
   return {
