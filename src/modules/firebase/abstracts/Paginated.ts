@@ -1,6 +1,6 @@
 export default interface Paginated {
-  page: {
-    index: number;
+  page?: {
+    lastId?: string;
     size: number;
   };
 }

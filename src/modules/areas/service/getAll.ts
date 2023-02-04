@@ -1,20 +1,16 @@
-import { areasCollection, getDocs, query, limit, startAt, orderBy, type QueryConstraint } from '#/firebase/firestore';
-import { FirestoreArea } from '@/modules/firebase/types';
+import { areasCollection, getDocs, query, doc, getDoc } from '#/firebase/firestore';
+import { getQuery } from '@/modules/firebase/utils';
+import { FirestoreArea, GetAreas } from '../abstracts';
 import { Area } from '../domain';
 
-interface GetAllAreasOptions {
-  limit?: number;
-  offset?: number;
-}
+const getAll: GetAreas = async (options = {}) => {
+  const { page } = options;
 
-const getAll = async (options: GetAllAreasOptions = {}): Promise<Area[]> => {
-  const { limit: limitDocs, offset } = options;
-
-  const queryParams: QueryConstraint[] = [
-    orderBy('name'),
-  ];
-  if (offset) queryParams.push(startAt(offset));
-  if (limitDocs) queryParams.push(limit(limitDocs));
+  const lastSnapshot = page?.lastId ? await getDoc(doc(areasCollection, page.lastId)) : undefined;
+  const queryParams = getQuery({
+    size: page?.size,
+    lastSnapshot,
+  });
 
   const areasQuery = query(areasCollection, ...queryParams);
   const snapshot = await getDocs(areasQuery);
