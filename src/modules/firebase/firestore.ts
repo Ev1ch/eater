@@ -42,4 +42,5 @@ export {
   orderBy,
   startAt,
   QueryConstraint,
+  endAt,
 } from 'firebase/firestore';

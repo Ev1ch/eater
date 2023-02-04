@@ -1,15 +1,16 @@
-import { mealsCollection, getDocs } from '#/firebase/firestore';
-import { getAreaByRef } from '@/modules/areas/service';
-import { getCategoryByRef } from '@/modules/categories/service';
-import { FirestoreMeal } from '@/modules/firebase/types';
-import { IngredientReference } from '@/modules/firebase/types/ingredients';
-import { getIngredientByRef } from '@/modules/ingredients/service';
-import { Tag } from '@/modules/tags/domain';
-import { getTagByRef } from '@/modules/tags/service';
-import { DocumentReference } from 'firebase/firestore';
-import { Meal, MealIngredient } from '../domain';
+import type { DocumentReference } from 'firebase/firestore';
 
-const getMeals = async (): Promise<Meal[]> => {
+import { getAreaByRef } from '#/areas/service';
+import { getCategoryByRef } from '#/categories/service';
+import { getDocs, mealsCollection } from '#/firebase/firestore';
+import type { IngredientReference } from '#/ingredients/abstracts';
+import { getIngredientByRef } from '#/ingredients/service';
+import type { FirestoreMeal, GetMeals } from '#/meals/abstracts';
+import type { Tag } from '#/tags/domain';
+import { getTagByRef } from '#/tags/service';
+import type { MealIngredient } from '../domain';
+
+const getMeals: GetMeals = async () => {
   const snapshot = await getDocs(mealsCollection);
   const meals: FirestoreMeal[] = [];
 
@@ -19,31 +20,33 @@ const getMeals = async (): Promise<Meal[]> => {
     meals.push(data);
   });
 
-  return Promise.all(meals.map(async (m) => {
-    const area = await getAreaByRef(m.areaRef);
-    const category = await getCategoryByRef(m.categoryRef);
-    const tags: Tag[] = await Promise.all(m.tags.map(
-      (tagRef: DocumentReference) => getTagByRef(tagRef),
-    ));
+  return Promise.all(
+    meals.map(async (m) => {
+      const area = await getAreaByRef(m.areaRef);
+      const category = await getCategoryByRef(m.categoryRef);
+      const tags: Tag[] = await Promise.all(
+        m.tags.map((tagRef: DocumentReference) => getTagByRef(tagRef)),
+      );
 
-    const ingredients: MealIngredient[] = await Promise.all(m.ingridients.map(
-      async (ingredient: IngredientReference) => ({
-        ...ingredient,
-        ingredient: await getIngredientByRef(ingredient.ingridientRef),
-      }),
-    ));
+      const ingredients: MealIngredient[] = await Promise.all(
+        m.ingridients.map(async (ingredient: IngredientReference) => ({
+          ...ingredient,
+          ingredient: await getIngredientByRef(ingredient.ingridientRef),
+        })),
+      );
 
-    return {
-      id: m.id,
-      name: m.name,
-      instructions: m.instructions,
-      image: m.image,
-      area,
-      category,
-      tags,
-      ingredients,
-    };
-  }));
+      return {
+        id: m.id,
+        name: m.name,
+        instructions: m.instructions,
+        image: m.image,
+        area,
+        category,
+        tags,
+        ingredients,
+      };
+    }),
+  );
 };
 
 export default getMeals;

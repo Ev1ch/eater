@@ -1,61 +1,90 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 import { hydrate } from '@/store/actions';
 import type { MealIngredient } from '#/meals/domain';
+import { createAsyncThunk } from '@/store/creators';
+import * as service from '../service';
+import { Fridge } from '../domain';
 
 interface IFridgesSlice {
-  id: string | null;
-  name: string | null;
-  content: MealIngredient[] | null;
+  entity: Fridge | null;
 }
 
 const initialState: IFridgesSlice = {
-  id: null,
-  name: null,
-  content: null,
+  entity: null,
 };
 
 const name = 'fridge';
 
+export const getFridge = createAsyncThunk<void, Fridge>(`${name}/getFridge`, async () => {
+  const fridge = await service.getFridge();
+  return fridge;
+});
+
+export const addIngredient = createAsyncThunk<Omit<MealIngredient, 'id'>, MealIngredient>(
+  `${name}/addIngredient`,
+  async (newIngredient) => {
+    const ingredient = await service.addIngredient(newIngredient);
+    return ingredient;
+  },
+);
+
+export const updateIngredientById = createAsyncThunk<
+  { id: string; updatedIngredient: Omit<MealIngredient, 'id'> },
+  MealIngredient
+>(`${name}/updateIngredientById`, async ({ id, updatedIngredient }) => {
+  const ingredient = await service.updateIngredientById(id, updatedIngredient);
+  return ingredient;
+});
+
+export const deleteIngredientById = createAsyncThunk<string, string>(
+  `${name}/deleteIngredientById`,
+  async (id) => {
+    await service.deleteIngredientById(id);
+    return id;
+  },
+);
+
 const slice = createSlice({
   name,
   initialState,
-  reducers: {
-    addIngredient(state, { payload }: PayloadAction<MealIngredient>) {
-      if (!state.content) {
-        throw new Error('Fridge content is not set');
-      }
-
-      state.content.push(payload);
-    },
-    deleteIngredientById(state, { payload }: PayloadAction<string>) {
-      if (!state.content) {
-        throw new Error('Fridge content is not set');
-      }
-
-      state.content = state.content.filter(({ id }) => id !== payload);
-    },
-    updateIngredientById(
-      state,
-      { payload }: PayloadAction<{ id: string; ingredient: MealIngredient }>,
-    ) {
-      if (!state.content) {
-        throw new Error('Fridge content is not set');
-      }
-
-      const index = state.content.findIndex((ingredient) => ingredient.id === payload.id);
-      state.content[index] = payload.ingredient;
-    },
-  },
+  reducers: {},
   extraReducers(builder) {
-    builder.addCase(hydrate, (state, { payload }) => {
-      const {
-        fridge: { name: sliceName, content },
-      } = payload;
+    builder
+      .addCase(hydrate, (state, { payload }) => {
+        const {
+          fridge: { entity },
+        } = payload;
 
-      state.name = sliceName;
-      state.content = content;
-    });
+        state.entity = entity;
+      })
+      .addCase(getFridge.fulfilled, (state, { payload }) => {
+        state.entity = payload;
+      })
+      .addCase(addIngredient.fulfilled, (state, { payload }) => {
+        if (!state.entity) {
+          throw new Error('Fridge content is not set');
+        }
+
+        state.entity.content.push(payload);
+      })
+      .addCase(updateIngredientById.fulfilled, (state, { payload }) => {
+        if (!state.entity) {
+          throw new Error('Fridge content is not set');
+        }
+
+        const index = state.entity.content.findIndex((ingredient) => ingredient.id === payload.id);
+        state.entity.content[index] = payload;
+      })
+      .addCase(deleteIngredientById.fulfilled, (state, { payload }) => {
+        if (!state.entity) {
+          throw new Error('Fridge content is not set');
+        }
+
+        state.entity.content = state.entity.content.filter(
+          (ingredient) => ingredient.id !== payload,
+        );
+      });
   },
 });
 

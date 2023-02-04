@@ -1,11 +1,11 @@
 import type { State } from '@/store/abstracts';
 import type { IngredientType } from '#/ingredient-types/domain';
 
-export const selectFridge = (state: State) => state.fridge;
+export const selectFridge = (state: State) => state.fridge.entity;
 
-export const selectFridgeName = (state: State) => selectFridge(state).name;
+export const selectFridgeName = (state: State) => selectFridge(state)?.name;
 
-export const selectFridgeContent = (state: State) => selectFridge(state).content;
+export const selectFridgeContent = (state: State) => selectFridge(state)?.content;
 
 export const selectFridgeIngredientById = (state: State, id: string) =>
   selectFridgeContent(state)?.find(({ id: ingredientId }) => ingredientId === id);
