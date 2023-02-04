@@ -2,8 +2,9 @@ import { DocumentReference } from 'firebase/firestore';
 import { ingredientsCollection, getDoc, doc } from '#/firebase/firestore';
 import { getIngredientTypeByRef } from '@/modules/ingredient-types/service';
 import { Ingredient } from '../domain';
+import { GetIngredientByRef } from '../abstracts';
 
-const getIngredientByRef = async (ref: DocumentReference) => {
+const getIngredientByRef: GetIngredientByRef = async (ref: DocumentReference) => {
   const snapshot = await getDoc(doc(ingredientsCollection, ref.id));
 
   if (!snapshot.exists()) {
