@@ -4,3 +4,4 @@ import type { Ingredient } from '../domain';
 
 export type GetIngredients = (options?: Paginated) => Promise<Ingredient[]>;
 export type GetIngredientByRef = (ref: DocumentReference) => Promise<Ingredient>;
+export type GetIngredientById = (id: string) => Promise<Ingredient>;

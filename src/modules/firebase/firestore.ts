@@ -41,7 +41,9 @@ export {
   startAfter,
   orderBy,
   startAt,
+  updateDoc,
   QueryConstraint,
   DocumentReference,
   endAt,
+  arrayUnion,
 } from 'firebase/firestore';
