@@ -3,7 +3,7 @@ import { getQuery } from '@/modules/firebase/utils';
 import { FirestoreArea, GetAreas } from '../abstracts';
 import { Area } from '../domain';
 
-const getAll: GetAreas = async (options = {}) => {
+const getAreas: GetAreas = async (options = {}) => {
   const { page } = options;
 
   const lastSnapshot = page?.lastId ? await getDoc(doc(areasCollection, page.lastId)) : undefined;
@@ -28,4 +28,4 @@ const getAll: GetAreas = async (options = {}) => {
   return areas;
 };
 
-export default getAll;
+export default getAreas;
