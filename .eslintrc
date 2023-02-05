@@ -25,7 +25,8 @@
         "props": true,
         "ignorePropertyModificationsFor": ["state"]
       }
-    ]
+    ],
+    "function-paren-newline": "off"
   },
   "overrides": [
     {
