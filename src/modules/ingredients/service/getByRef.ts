@@ -14,6 +14,8 @@ const getIngredientByRef: GetIngredientByRef = async (ref: DocumentReference) =>
   const data = snapshot.data();
   data.type = await getIngredientTypeByRef(data.ingredientTypeRef);
 
+  delete data.ingredientTypeRef;
+
   return data as Ingredient;
 };
 

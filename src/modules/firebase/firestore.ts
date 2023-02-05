@@ -31,6 +31,7 @@ export {
   doc,
   getDoc,
   getDocs,
+  addDoc,
   query,
   queryEqual,
   where,

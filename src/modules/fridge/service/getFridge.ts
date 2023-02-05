@@ -2,8 +2,8 @@ import { IngredientReference } from '@/modules/ingredients/abstracts';
 import { getIngredientByRef } from '@/modules/ingredients/service';
 import { MealIngredient } from '@/modules/meals/domain';
 import { GetOwnFridge } from '../abstracts/Service';
+import getUserFridgeSnap from '../utils/getUserFridge';
 import type { Fridge } from '../domain';
-import { getUserFridgeSnap } from '../utils';
 
 const getFridge: GetOwnFridge = async () => {
   const snapshot = await getUserFridgeSnap();

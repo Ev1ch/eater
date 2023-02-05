@@ -1,1 +1,1 @@
-export type { default as Fridge } from './Fridge';
+export type { default as Fridge, NormalizedFridge } from './Fridge';
