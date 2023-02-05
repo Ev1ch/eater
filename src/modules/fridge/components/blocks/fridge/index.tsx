@@ -1,6 +1,7 @@
 import { useSelector } from '@/store/hooks';
 import { Box } from '@/components/common';
 import { selectFridgeIngredientsTypes } from '@/modules/fridge/slice/selectors';
+
 import FridgeSection from './FridgeSection';
 import AddIngredient from './AddIngredient';
 

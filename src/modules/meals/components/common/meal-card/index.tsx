@@ -53,7 +53,7 @@ export default function MealCard({ meal }: IMealCardProps) {
         </List>
         <Stack direction="row" spacing={1}>
           {meal.ingredients.map(({ ingredient }) => (
-            <IngredientChip ingredient={ingredient} />
+            <IngredientChip key={ingredient.id} ingredient={ingredient} />
           ))}
         </Stack>
       </CardContent>
