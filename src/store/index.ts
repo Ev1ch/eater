@@ -10,6 +10,7 @@ import ingredientTypesReducer from '#/ingredient-types/slice';
 import ingredientsReducer from '#/ingredients/slice';
 import tagsReducer from '#/tags/slice';
 import mealsReducer from '#/meals/slice';
+import userReducer from '#/user/slice';
 
 export const createStore = () =>
   configureStore({
@@ -22,6 +23,7 @@ export const createStore = () =>
       ingredients: ingredientsReducer,
       tags: tagsReducer,
       meals: mealsReducer,
+      user: userReducer,
     },
     devTools: environment.isDevelopment,
   });

@@ -33,7 +33,6 @@ export const addFridgeIngredient = createAsyncThunk<
   Omit<NormalizedMealIngredient, 'id'>,
   NormalizedMealIngredient
 >(`${name}/addFridgeIngredient`, async (newIngredient, { dispatch }) => {
-  // @ts-expect-error
   const ingredient = await service.addIngredient(newIngredient);
   const normalizedIngredient = normalizeMealIngredient(dispatch, ingredient);
 
@@ -63,7 +62,7 @@ const slice = createSlice({
   name,
   initialState,
   reducers: {
-    setFridge(state, { payload }: PayloadAction<NormalizedFridge>) {
+    setFridge(state, { payload }: PayloadAction<NormalizedFridge | null>) {
       state.entity = payload;
     },
   },
