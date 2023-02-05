@@ -19,9 +19,43 @@ export const selectIngredientsArray = createSelector([selectIngredients], (ingre
   Object.values(ingredients),
 );
 
-export const selectIngredientsOptions = (state: State) => state.ingredients.options;
-
 export const selectIngredientById = createSelector(
   [selectIngredients, (state, id: string) => id],
   (ingredients, id) => ingredients[id],
+);
+
+export const selectIngredientsOrders = (state: State) => state.ingredients.orders;
+
+export const selectNameOrder = createSelector([selectIngredientsOrders], (orders) => orders.name);
+
+export const selectNameOptions = createSelector([selectNameOrder], (order) => order.options);
+
+export const selectNameNormalizedPages = createSelector([selectNameOrder], (order) => order.pages);
+
+export const selectNamePages = createSelector(
+  [selectIngredients, selectNameNormalizedPages],
+  (ingredients, pages) =>
+    pages.map(({ ingredients: currentIngredients }) => ({
+      ingredients: currentIngredients.map((ingredient) => ingredients[ingredient]),
+    })),
+);
+
+export const selectNameCurrentPageIndex = createSelector(
+  [selectNameOptions],
+  (options) => options.page.index,
+);
+
+export const selectNameCurrentPage = createSelector(
+  [selectNamePages, selectNameCurrentPageIndex],
+  (pages, index) => pages[index - 1],
+);
+
+export const selectNamePageSize = createSelector(
+  [selectNameOptions],
+  (options) => options.page.size,
+);
+
+export const selectNamePagesToCurrent = createSelector(
+  [selectNamePages, selectNameCurrentPageIndex],
+  (pages, index) => pages.slice(0, index),
 );

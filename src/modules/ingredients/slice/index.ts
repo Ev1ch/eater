@@ -2,38 +2,74 @@ import { createSlice, isFulfilled, PayloadAction } from '@reduxjs/toolkit';
 
 import { hydrate } from '@/store/actions';
 import { createAsyncThunk } from '@/store/creators';
-import { normalize } from '#/normalization/utils';
 import { DEFAULT_PAGE_SIZE } from '../constants';
-import type { Ingredient, NormalizedIngredient } from '../domain';
+import type { NormalizedIngredient } from '../domain';
 import * as service from '../service';
-import { NormalizedIngredients, ingredientEntity, NormalizedEntities } from './normalization';
+import { NormalizedIngredients, normalizeIngredients } from './normalization';
+import { selectNamePages, selectNamePageSize } from './selectors';
+
+interface IngredientsPage {
+  ingredients: string[];
+}
 
 interface IngredientsState {
   entities: NormalizedIngredients;
-  options: {
-    page: {
-      size: number;
+  orders: {
+    name: {
+      options: {
+        page: {
+          size: number;
+          index: number;
+        };
+      };
+      pages: IngredientsPage[];
     };
   };
 }
 
 const initialState: IngredientsState = {
   entities: {},
-  options: {
-    page: {
-      size: DEFAULT_PAGE_SIZE,
+  orders: {
+    name: {
+      options: {
+        page: {
+          size: DEFAULT_PAGE_SIZE,
+          index: 1,
+        },
+      },
+      pages: [],
     },
   },
 };
 
 const name = 'ingredients';
 
-export const getIngredients = createAsyncThunk<void, Ingredient[]>(
+export const getIngredients = createAsyncThunk<void, NormalizedIngredient[]>(
   `${name}/getIngredients`,
-  async () => {
-    // @ts-expect-error
+  async (_, { dispatch }) => {
     const ingredients = await service.getIngredients();
-    return ingredients;
+    const normalizedIngredients = normalizeIngredients(dispatch, ingredients);
+
+    return normalizedIngredients;
+  },
+);
+
+export const getIngredientsByName = createAsyncThunk<string, NormalizedIngredient[]>(
+  `${name}/getIngredientsByName`,
+  async (ingredientName, { dispatch, getState }) => {
+    const size = selectNamePageSize(getState());
+    const pages = selectNamePages(getState());
+    const lastId = pages.at(-1)?.ingredients.at(-1);
+    // @ts-expect-error
+    const ingredients = await service.getIngredientsByName(ingredientName, {
+      page: {
+        size,
+        lastId,
+      },
+    });
+    const normalizedIngredients = normalizeIngredients(dispatch, ingredients);
+
+    return normalizedIngredients;
   },
 );
 
@@ -47,24 +83,35 @@ const slice = createSlice({
     setIngredients(state, { payload }: PayloadAction<NormalizedIngredients>) {
       Object.assign(state.entities, payload);
     },
+    resetNamePageIndex(state) {
+      state.orders.name.options.page.index = 1;
+    },
+    setNameNextPageIndex(state) {
+      state.orders.name.options.page.index += 1;
+    },
   },
   extraReducers(builder) {
-    builder.addCase(hydrate, (state, { payload }) => {
-      state.entities = payload.ingredients.entities;
-    });
-    builder.addMatcher(isFulfilled(getIngredients), (state, { payload }) => {
-      const {
-        entities: { ingredients },
-      } = normalize<NormalizedEntities>(payload, [ingredientEntity]);
+    builder
+      .addCase(hydrate, (state, { payload }) => {
+        state.entities = payload.ingredients.entities;
+      })
+      .addCase(getIngredientsByName.fulfilled, (state, { payload }) => {
+        const { options } = state.orders.name;
+        const currentIndex = options.page.index - 1;
 
-      Object.values(ingredients).forEach((ingredient) => {
-        state.entities[ingredient.id] = ingredient;
+        state.orders.name.pages[currentIndex] = {
+          ingredients: payload.map(({ id }) => id),
+        };
+      })
+      .addMatcher(isFulfilled(getIngredients, getIngredientsByName), (state, { payload }) => {
+        payload.forEach((ingredient) => {
+          state.entities[ingredient.id] = ingredient;
+        });
       });
-    });
   },
 });
 
 const { reducer, actions } = slice;
-export const { setIngredient, setIngredients } = actions;
+export const { setIngredient, setIngredients, resetNamePageIndex, setNameNextPageIndex } = actions;
 export * from './selectors';
 export default reducer;
