@@ -26,7 +26,8 @@
         "ignorePropertyModificationsFor": ["state"]
       }
     ],
-    "function-paren-newline": "off"
+    "function-paren-newline": "off",
+    "react/jsx-one-expression-per-line": "off"
   },
   "overrides": [
     {
