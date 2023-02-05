@@ -7,8 +7,9 @@ import { Ingredient } from '../domain';
 const getIngredients: GetIngredients = async (options = {}) => {
   const { page } = options;
 
-  const lastSnapshot = page?.lastId ?
-    await getDoc(doc(ingredientsCollection, page.lastId)) : undefined;
+  const lastSnapshot = page?.lastId
+    ? await getDoc(doc(ingredientsCollection, page.lastId))
+    : undefined;
   const queryParams = getQuery({
     size: page?.size,
     lastSnapshot,
@@ -16,16 +17,18 @@ const getIngredients: GetIngredients = async (options = {}) => {
 
   const ingredientsQuery = query(ingredientsCollection, ...queryParams);
   const snapshot = await getDocs(ingredientsQuery);
-  const ingredients: Ingredient[] = await Promise.all(snapshot.docs.map(async (s) => {
-    const data = s.data() as FirestoreIngredient;
+  const ingredients: Ingredient[] = await Promise.all(
+    snapshot.docs.map(async (s) => {
+      const data = s.data() as FirestoreIngredient;
 
-    return {
-      id: data.id,
-      name: data.name,
-      description: data.description,
-      type: await getIngredientTypeByRef(data.ingredientTypeRef),
-    };
-  }));
+      return {
+        id: data.id,
+        name: data.name,
+        description: data.description,
+        type: await getIngredientTypeByRef(data.ingredientTypeRef),
+      };
+    }),
+  );
 
   return ingredients;
 };

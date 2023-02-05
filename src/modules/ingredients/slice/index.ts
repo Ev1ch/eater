@@ -50,7 +50,7 @@ const slice = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(hydrate, (state, { payload }) => {
-      state.entities = payload.ingredients.entities;
+      Object.assign(state.entities, payload.ingredients.entities);
     });
     builder.addMatcher(isFulfilled(getIngredients), (state, { payload }) => {
       const {
@@ -67,4 +67,5 @@ const slice = createSlice({
 const { reducer, actions } = slice;
 export const { setIngredient, setIngredients } = actions;
 export * from './selectors';
+
 export default reducer;
