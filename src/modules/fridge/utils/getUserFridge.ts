@@ -1,5 +1,5 @@
 import { fridgesCollection, getDocs, query, where } from '@/modules/firebase/firestore';
-import { getCurrentUser } from '@/modules/user/service';
+import getCurrentUser from '@/modules/user/service/getCurrentUser';
 
 const getUserFridgeSnap = async () => {
   const currentUser = await getCurrentUser();

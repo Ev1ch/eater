@@ -1,5 +1,5 @@
 import { User } from '@/modules/user/domain';
-import { getCurrentUser } from '@/modules/user/service';
+import getCurrentUser from '@/modules/user/service/getCurrentUser';
 import { query, where, getDocs, fridgesCollection } from '#/firebase/firestore';
 import { CheckFridgeExist } from '../abstracts/Service';
 

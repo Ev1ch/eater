@@ -13,7 +13,6 @@ export default function Home() {
     await signInWithPopup();
 
     console.log(123, await getCurrentUser());
-    
   };
 
   return (

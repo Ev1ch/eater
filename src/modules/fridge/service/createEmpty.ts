@@ -1,5 +1,5 @@
 import { User } from '@/modules/user/domain';
-import { getCurrentUser } from '@/modules/user/service';
+import getCurrentUser from '@/modules/user/service/getCurrentUser';
 import { setDoc, doc, fridgesCollection } from '#/firebase/firestore';
 import { getRandomId } from '@/modules/firebase/utils';
 import { FirestoreFridge } from '../abstracts';
