@@ -6,8 +6,9 @@ import { Category } from '../domain';
 const getAreas: GetCategories = async (options = {}) => {
   const { page } = options;
 
-  const lastSnapshot = page?.lastId ?
-    await getDoc(doc(categoriesCollection, page.lastId)) : undefined;
+  const lastSnapshot = page?.lastId
+    ? await getDoc(doc(categoriesCollection, page.lastId))
+    : undefined;
   const queryParams = getQuery({
     size: page?.size,
     lastSnapshot,
