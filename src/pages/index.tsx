@@ -1,12 +1,9 @@
-import { useTranslation } from '#/localization/hooks';
-
 import wrapper from '@/store';
 import { getT } from '#/localization/utils';
-import '@/environment/client';
+import { Home as HomePage } from '#/meals/pages';
 
 export default function Home() {
-  const { t } = useTranslation();
-  return <>{t('common:company.name')}</>;
+  return <HomePage />;
 }
 
 export const getStaticProps = wrapper.getStaticProps(() => async ({ locale }) => {

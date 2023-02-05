@@ -1,10 +1,5 @@
 import { DocumentSnapshot } from 'firebase/firestore';
-import {
-  orderBy as orderByConstraint,
-  startAfter,
-  type QueryConstraint,
-  limit,
-} from './firestore';
+import { orderBy as orderByConstraint, startAfter, type QueryConstraint, limit } from './firestore';
 
 export { nanoid as getRandomId } from 'nanoid';
 
@@ -15,15 +10,9 @@ interface GetQuery {
 }
 
 export const getQuery = (options: GetQuery = {}) => {
-  const {
-    orderBy = 'id',
-    lastSnapshot,
-    size,
-  } = options;
+  const { orderBy = 'id', lastSnapshot, size } = options;
 
-  const queryParams: QueryConstraint[] = [
-    orderByConstraint(orderBy),
-  ];
+  const queryParams: QueryConstraint[] = [orderByConstraint(orderBy)];
 
   if (lastSnapshot && !lastSnapshot.exists()) {
     throw new Error('Provided snapshot not exists');
