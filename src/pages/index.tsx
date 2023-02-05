@@ -1,18 +1,26 @@
 import wrapper from '@/store';
 import { getT } from '#/localization/utils';
 import { Home as HomePage } from '#/meals/pages';
+import { getCurrentUser } from '#/user/slice';
+import { getMeals } from '#/meals/slice';
 
 export default function Home() {
   return <HomePage />;
 }
 
-export const getStaticProps = wrapper.getStaticProps(() => async ({ locale }) => {
-  const t = await getT(locale, ['pages/home']);
-  const title = t('pages/home:meta.title');
+export const getServerSideProps = wrapper.getServerSideProps(
+  ({ dispatch }) =>
+    async ({ locale }) => {
+      const t = await getT(locale, ['pages/home']);
+      const title = t('pages/home:meta.title');
 
-  return {
-    props: {
-      title,
+      await dispatch(getCurrentUser());
+      await dispatch(getMeals());
+
+      return {
+        props: {
+          title,
+        },
+      };
     },
-  };
-});
+);
