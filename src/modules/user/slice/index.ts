@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { hydrate } from '@/store/actions';
 import { createAsyncThunk } from '@/store/creators';
+import { getFridge } from '#/fridge/slice';
 import * as service from '../service';
 import type { User } from '../domain';
 
@@ -27,8 +28,10 @@ export const getCurrentUser = createAsyncThunk<void, User | null>(
 
 export const signInWithPopup = createAsyncThunk<void, User | null>(
   `${name}/signInWithPopup`,
-  async () => {
+  async (_, { dispatch }) => {
     const user = await service.signInWithPopup();
+
+    await dispatch(getFridge()).unwrap();
 
     return user;
   },
