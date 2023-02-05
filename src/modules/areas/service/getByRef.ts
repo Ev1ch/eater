@@ -1,8 +1,8 @@
-import { DocumentReference } from 'firebase/firestore';
-import { areasCollection, getDoc, doc } from '#/firebase/firestore';
+import { areasCollection, getDoc, doc, DocumentReference } from '#/firebase/firestore';
+import { GetAreaByRef } from '../abstracts';
 import { Area } from '../domain';
 
-const getAreaByRef = async (ref: DocumentReference) => {
+const getAreaByRef: GetAreaByRef = async (ref: DocumentReference) => {
   const snapshot = await getDoc(doc(areasCollection, ref.id));
 
   if (!snapshot.exists()) {

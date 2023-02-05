@@ -4,5 +4,5 @@ export default interface FirestoreIngredient extends DocumentData {
   id: string;
   name: string;
   description: string;
-  ingridientTypeRef: DocumentReference;
+  ingredientTypeRef: DocumentReference;
 }
