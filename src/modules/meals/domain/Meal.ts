@@ -4,6 +4,7 @@ import type { Category } from '@/modules/categories/domain';
 import type { Tag } from '@/modules/tags/domain';
 
 export interface MealIngredientBase {
+  id: string;
   amount: Amount;
 }
 

@@ -3,10 +3,16 @@ import { useTranslation } from '#/localization/hooks';
 import wrapper from '@/store';
 import { getT } from '#/localization/utils';
 import '@/environment/client';
+import { Button } from '@mui/material';
 
 export default function Home() {
   const { t } = useTranslation();
-  return <>{t('common:company.name')}</>;
+  return (
+    <>
+      <Button>Login</Button>
+      {t('common:company.name')}
+    </>
+  );
 }
 
 export const getStaticProps = wrapper.getStaticProps(() => async ({ locale }) => {
