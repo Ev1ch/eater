@@ -4,7 +4,7 @@ import { hydrate } from '@/store/actions';
 import { createAsyncThunk } from '@/store/creators';
 import { normalize } from '#/normalization/utils';
 import { DEFAULT_PAGE_SIZE } from '../constants';
-import type { Ingredient } from '../domain';
+import type { Ingredient, NormalizedIngredient } from '../domain';
 import * as service from '../service';
 import { NormalizedIngredients, ingredientEntity, NormalizedEntities } from './normalization';
 
@@ -41,7 +41,7 @@ const slice = createSlice({
   name,
   initialState,
   reducers: {
-    setIngredient(state, { payload }: PayloadAction<Ingredient>) {
+    setIngredient(state, { payload }: PayloadAction<NormalizedIngredient>) {
       state.entities[payload.id] = payload;
     },
     setIngredients(state, { payload }: PayloadAction<NormalizedIngredients>) {
