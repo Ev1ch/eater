@@ -14,7 +14,7 @@ export default function Home() {
       <Grid sm={user ? 7 : 12} item>
         <Grid container>
           {Object.values(meals).map((meal) => (
-            <Grid key={meal.id} xs={12} md={5} item>
+            <Grid key={meal.id} xs={12} md={6} item>
               <MealCard meal={meal} />
             </Grid>
           ))}
