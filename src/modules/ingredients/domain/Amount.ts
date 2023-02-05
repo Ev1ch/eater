@@ -29,7 +29,11 @@ const convertToG = (val: Amount) => {
 type CompareOperator = '>' | '>=' | '<' | '<=' | '==';
 type MathOperator = '+' | '-' | '*' | '/';
 
-export const operateAmounts = (a: Amount, b: Amount, operator: CompareOperator | MathOperator = '>=') => {
+export const operateAmounts = (
+  a: Amount,
+  b: Amount,
+  operator: CompareOperator | MathOperator = '>=',
+) => {
   const v1 = convertToG(a);
   const v2 = convertToG(b);
 

@@ -21,7 +21,7 @@ const getMealsByIngredients: GetMealsFromIngredients = async (ingredients) => {
   );
 
   return meals.filter(({ ingredients: mealIngredients }) =>
-    mealIngredients.every((i) => operateAmounts(ingredientsMap[i.ingredient.id].amount, i.amount))
+    mealIngredients.every((i) => operateAmounts(ingredientsMap[i.ingredient.id].amount, i.amount)),
   );
 };
 

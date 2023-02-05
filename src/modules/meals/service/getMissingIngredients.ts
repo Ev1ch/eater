@@ -21,10 +21,7 @@ const getMissingIngredients: GetMissingIngredients = async (meal, ingredients) =
     })),
   );
   const fridgeIngredientsMap: Record<string, (typeof fridgeIngredientsDb)[number]> =
-    fridgeIngredientsDb.reduce(
-      (acc, curr) => ({ ...acc, [curr.ingredient.id]: curr }),
-      {},
-    );
+    fridgeIngredientsDb.reduce((acc, curr) => ({ ...acc, [curr.ingredient.id]: curr }), {});
   const fridgeIngredientIds = Object.keys(fridgeIngredientsMap);
 
   // difference
@@ -37,7 +34,11 @@ const getMissingIngredients: GetMissingIngredients = async (meal, ingredients) =
       return diff.push(ing);
     }
     // ingridients user have partly
-    const diffAmount = operateAmounts(ing.amount, fridgeIngredientsMap[ing.ingredient.id].amount, '-');
+    const diffAmount = operateAmounts(
+      ing.amount,
+      fridgeIngredientsMap[ing.ingredient.id].amount,
+      '-',
+    );
     if (diffAmount > 0) {
       const amountType = ing.amount.type;
       const multiplier = amountMultiplier[amountType];
