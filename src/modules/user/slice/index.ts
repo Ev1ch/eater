@@ -4,7 +4,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { hydrate } from '@/store/actions';
 import { createAsyncThunk } from '@/store/creators';
 import * as service from '../service';
-import { User } from '../domain';
+import type { User } from '../domain';
 
 interface UserSlice {
   entity: User | null;
@@ -25,6 +25,15 @@ export const getCurrentUser = createAsyncThunk<void, User | null>(
   },
 );
 
+export const signInWithPopup = createAsyncThunk<void, User | null>(
+  `${name}/signInWithPopup`,
+  async () => {
+    const user = await service.signInWithPopup();
+
+    return user;
+  },
+);
+
 const slice = createSlice({
   name,
   initialState,
@@ -35,6 +44,9 @@ const slice = createSlice({
         state.entity = payload.user.entity;
       })
       .addCase(getCurrentUser.fulfilled, (state, { payload }) => {
+        state.entity = payload;
+      })
+      .addCase(signInWithPopup.fulfilled, (state, { payload }) => {
         state.entity = payload;
       });
   },
