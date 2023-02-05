@@ -9,5 +9,5 @@ export default interface FirestoreMeal extends DocumentData {
   areaRef: DocumentReference;
   categoryRef: DocumentReference;
   tags: DocumentReference[];
-  ingridients: IngredientReference[];
+  ingredients: IngredientReference[];
 }

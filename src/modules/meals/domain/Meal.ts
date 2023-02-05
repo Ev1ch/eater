@@ -8,6 +8,7 @@ export interface MealIngredientBase {
 }
 
 export interface MealIngredient extends MealIngredientBase {
+  id: string;
   ingredient: Ingredient;
 }
 

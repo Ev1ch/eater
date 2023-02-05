@@ -2,13 +2,12 @@ import type { MealIngredient, NormalizedMealIngredient } from '#/meals/domain/Me
 
 export interface FridgeBase {
   id: string;
-  name: string;
 }
 
 export default interface Fridge extends FridgeBase {
-  content: MealIngredient[];
+  ingredients: MealIngredient[];
 }
 
 export interface NormalizedFridge extends FridgeBase {
-  content: NormalizedMealIngredient[];
+  ingredients: NormalizedMealIngredient[];
 }

@@ -1,16 +1,23 @@
-import { deleteDoc, doc } from '#/firebase/firestore';
-import getFridge from './getFridge';
-import getIngredientsSubcollection from './getIngredientsSubcollection';
+import { doc, fridgesCollection, updateDoc } from '#/firebase/firestore';
+import { DeleteIngredientFromFridgeById } from '../abstracts/Service';
+import { FirestoreFridge } from '../abstracts';
+import { getUserFridgeSnap } from '../utils';
 
-const deleteIngredientById = async (id: string) => {
-  const fridge = await getFridge();
+const deleteIngredientById: DeleteIngredientFromFridgeById = async (id: string) => {
+  const snapshot = await getUserFridgeSnap();
 
-  const subcollection = await getIngredientsSubcollection(fridge.id);
-  const ref = doc(subcollection, id);
+  const data = snapshot.docs[0].data();
+  const fridge: FirestoreFridge = {
+    id: data.id,
+    userId: data.userId,
+    ingredients: data.ingredients,
+  };
+  const fridgeRef = doc(fridgesCollection, fridge.id);
+  const rest = fridge.ingredients.filter((i) => i.id !== id);
 
-  await deleteDoc(ref);
-
-  return id;
+  await updateDoc(fridgeRef, {
+    ingredients: rest,
+  });
 };
 
 export default deleteIngredientById;

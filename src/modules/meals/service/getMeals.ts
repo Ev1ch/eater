@@ -29,9 +29,10 @@ const getMeals: GetMeals = async () => {
       );
 
       const ingredients: MealIngredient[] = await Promise.all(
-        m.ingridients.map(async (ingredient: IngredientReference) => ({
-          ...ingredient,
-          ingredient: await getIngredientByRef(ingredient.ingridientRef),
+        m.ingredients.map(async (ingredient: IngredientReference) => ({
+          id: ingredient.id,
+          amount: ingredient.amount,
+          ingredient: await getIngredientByRef(ingredient.ingredientRef),
         })),
       );
 

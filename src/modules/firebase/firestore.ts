@@ -38,6 +38,13 @@ export {
   setDoc,
   deleteDoc,
   limit,
+  startAfter,
+  orderBy,
   startAt,
+  updateDoc,
+  QueryConstraint,
+  DocumentReference,
   endAt,
+  arrayUnion,
+  arrayRemove,
 } from 'firebase/firestore';

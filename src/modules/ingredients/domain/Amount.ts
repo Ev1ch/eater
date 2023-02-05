@@ -1,7 +1,7 @@
 export enum AmountType {
-  G,
-  KG,
-  L,
+  G = 'G',
+  KG = 'KG',
+  L = 'L',
 }
 
 export default interface Amount {
