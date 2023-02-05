@@ -1,8 +1,9 @@
 import { DocumentReference } from 'firebase/firestore';
 import { categoriesCollection, getDoc, doc } from '#/firebase/firestore';
 import { Category } from '../domain';
+import { GetCategoryByRef } from '../abstracts';
 
-const getCategoryByRef = async (ref: DocumentReference) => {
+const getCategoryByRef: GetCategoryByRef = async (ref: DocumentReference) => {
   const snapshot = await getDoc(doc(categoriesCollection, ref.id));
 
   if (!snapshot.exists()) {

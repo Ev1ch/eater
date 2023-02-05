@@ -5,5 +5,5 @@ import type { IngredientReference } from '#/ingredients/abstracts';
 export default interface FirestoreFridge extends DocumentData {
   id: string;
   userId: string;
-  ingridients: IngredientReference[];
+  ingredients: IngredientReference[];
 }

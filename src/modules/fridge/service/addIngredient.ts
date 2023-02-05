@@ -1,20 +1,33 @@
-import { doc, setDoc } from '#/firebase/firestore';
+import { doc, ingredientsCollection, updateDoc, arrayUnion, fridgesCollection } from '#/firebase/firestore';
 import { getRandomId } from '#/firebase/utils';
-import type { MealIngredient } from '#/meals/domain';
+import { getIngredientById } from '@/modules/ingredients/service';
+import { NormalizedMealIngredient } from '@/modules/meals/domain/Meal';
+import { AddFridgeIngredient } from '../abstracts/Service';
 import getFridge from './getFridge';
-import getIngredientsSubcollection from './getIngredientsSubcollection';
 
-const addIngredient = async (newIngredient: Omit<MealIngredient, 'id'>) => {
+const addIngredient: AddFridgeIngredient = async (ingredientToAdd: Omit<NormalizedMealIngredient, 'id'>) => {
   const fridge = await getFridge();
+  const ingredientDb = await getIngredientById(ingredientToAdd.ingredient);
 
-  const subcollection = await getIngredientsSubcollection(fridge.id);
+  const fridgeRef = doc(fridgesCollection, fridge.id);
   const ingredientId = getRandomId();
-  const ref = doc(subcollection, ingredientId);
-  const ingredient = { ...newIngredient, id: ingredientId } as MealIngredient;
 
-  await setDoc(ref, ingredient);
+  const ingredientRef = doc(ingredientsCollection, ingredientToAdd.ingredient);
+  const newIngredient = {
+    id: ingredientId,
+    amount: ingredientToAdd.amount,
+    ingredientRef,
+  };
 
-  return ingredient;
+  await updateDoc(fridgeRef, {
+    ingredients: arrayUnion(newIngredient),
+  });
+
+  return {
+    ingredient: ingredientDb,
+    id: newIngredient.id,
+    amount: newIngredient.amount,
+  };
 };
 
 export default addIngredient;

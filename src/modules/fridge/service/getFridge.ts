@@ -1,26 +1,26 @@
-import { fridgesCollection, getDocs, query, where } from '#/firebase/firestore';
-import { getCurrentUser } from '#/user/service';
+import { IngredientReference } from '@/modules/ingredients/abstracts';
+import { getIngredientByRef } from '@/modules/ingredients/service';
+import { MealIngredient } from '@/modules/meals/domain';
+import { GetOwnFridge } from '../abstracts/Service';
+import getUserFridgeSnap from '../utils/getUserFridge';
 import type { Fridge } from '../domain';
-import getIngredientsSubcollection from './getIngredientsSubcollection';
 
-const getFridge = async () => {
-  const currentUser = await getCurrentUser();
+const getFridge: GetOwnFridge = async () => {
+  const snapshot = await getUserFridgeSnap();
 
-  if (!currentUser) {
-    throw new Error('User is not logged in');
-  }
-
-  const fridgeQuery = query(fridgesCollection, where('userId', '==', currentUser.id));
-  const snapshot = await getDocs(fridgeQuery);
-
-  if (!snapshot.size) {
-    throw new Error('User fridge is not created');
-  }
-
-  const fridge = snapshot.docs[0].data();
-  const subcollection = await getIngredientsSubcollection(fridge.id);
-  const ingredientsSnapshot = await getDocs(subcollection);
-  const ingredients = ingredientsSnapshot.forEach((doc) => doc.data());
+  const data = snapshot.docs[0].data();
+  const fridge = {
+    id: data.id,
+    userId: data.userId,
+    ingredients: data.ingredients,
+  };
+  const ingredients: MealIngredient[] = await Promise.all(
+    fridge.ingredients.map(async (ingredient: IngredientReference) => ({
+      id: ingredient.id,
+      amount: ingredient.amount,
+      ingredient: await getIngredientByRef(ingredient.ingredientRef),
+    })),
+  );
   fridge.ingredients = ingredients;
 
   return fridge as Fridge;
