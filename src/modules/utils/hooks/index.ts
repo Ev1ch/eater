@@ -1,1 +1,1 @@
-export { useMount } from 'react-use';
+export { useMount, useDebounce } from 'react-use';
