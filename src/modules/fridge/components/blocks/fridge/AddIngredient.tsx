@@ -1,30 +1,24 @@
 /* eslint-disable react/jsx-props-no-spreading */
+import { useForm } from '#/forms/hooks';
+import { useMount } from '#/utils/hooks';
 import {
-  Box,
   Autocomplete,
-  TextField,
+  Box,
+  Button,
   FormControl,
   MenuItem,
   Select,
-  Button,
+  TextField,
 } from '@/components/common';
-import { AmountType } from '@/modules/ingredients/domain';
-import { selectIngredientsArray } from '@/modules/ingredients/slice';
 import { useDispatch, useSelector } from '@/store/hooks';
-import { Sx } from '@/styles/types';
-import { useForm } from '#/forms/hooks';
-import { DEFAULT_AMOUNT_TYPE } from '@/modules/fridge/constants';
-import { addFridgeIngredient } from '@/modules/fridge/slice';
+import type { Sx } from '@/styles/types';
+import { DEFAULT_AMOUNT_TYPE, AMOUNT_TYPE_TO_NAME } from '#/fridge/constants';
+import { addFridgeIngredient } from '#/fridge/slice';
+import { getIngredients, selectIngredientsArray } from '#/ingredients/slice';
 
 interface AddIngredientProps {
   sx?: Sx;
 }
-
-const AMOUNT_TYPE_TO_NAME: Record<AmountType, string> = {
-  [AmountType.G]: 'g',
-  [AmountType.KG]: 'kg',
-  [AmountType.L]: 'l',
-};
 
 const defaultValues = {
   ingredient: '',
@@ -44,10 +38,19 @@ export default function AddIngredient({ sx = {} }: AddIngredientProps) {
     formState: { isSubmitting },
   } = useForm({ defaultValues });
 
+  useMount(() => {
+    dispatch(getIngredients());
+  });
+
   const handleAdd = async (data: typeof defaultValues) => {
     // TODO: Improve this logic
     try {
-      await dispatch(addFridgeIngredient({ ...data })).unwrap();
+      await dispatch(
+        addFridgeIngredient({
+          ...data,
+          ingredient: ingredients.find(({ name }) => name === data.ingredient)!.id,
+        }),
+      ).unwrap();
       reset();
     } catch (error) {
       // TODO: Add errors handling

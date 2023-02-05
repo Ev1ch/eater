@@ -10,6 +10,7 @@ import {
 import { ExpandMore as ExpandMoreIcon } from '@/components/icons';
 import type { IngredientType } from '@/modules/ingredient-types/domain';
 import { selectFridgeIngredientsByType } from '@/modules/fridge/slice';
+import { AMOUNT_TYPE_TO_NAME } from '@/modules/fridge/constants';
 
 interface FridgeSectionProps {
   type: IngredientType;
@@ -25,9 +26,16 @@ export default function FridgeSection({ type }: FridgeSectionProps) {
       </AccordionSummary>
       <AccordionDetails>
         <List>
-          {ingredients.map(({ id, ingredient }) => (
-            <ListItem key={id}>
+          {ingredients.map(({ id, ingredient, amount }) => (
+            <ListItem
+              key={id}
+              sx={{ display: 'flex', justifyContent: 'space-between' }}
+              disablePadding
+            >
               <Typography>{ingredient.name}</Typography>
+              <Typography>
+                {amount.value} {AMOUNT_TYPE_TO_NAME[amount.type]}
+              </Typography>
             </ListItem>
           ))}
         </List>
