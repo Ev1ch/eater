@@ -6,6 +6,10 @@ import { Meal } from '../domain';
 import getMeals from './getMeals';
 
 const getMealsByIngredients: GetMealsFromIngredients = async (ingredients, options = {}) => {
+  if (ingredients.length === 0) {
+    return [];
+  }
+
   const ingredientsDb = await Promise.all(
     ingredients.map(async (i) => ({
       ...i,
