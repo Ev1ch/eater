@@ -22,11 +22,11 @@ export default function Layout({ children }: LayoutProps) {
   };
 
   const link = user ? (
-    <Link href="" onClick={handleSignOut}>
+    <Link sx={{ color: 'primary.contrastText' }} href="" onClick={handleSignOut}>
       Sign out
     </Link>
   ) : (
-    <Link href="" onClick={handleSignIn}>
+    <Link sx={{ color: 'primary.contrastText' }} href="" onClick={handleSignIn}>
       Sign in
     </Link>
   );
@@ -40,7 +40,7 @@ export default function Layout({ children }: LayoutProps) {
   );
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <AppBar sx={{ position: 'static' }}>
         <Toolbar sx={{ justifyContent: 'space-between' }}>
           {profile}
@@ -52,10 +52,6 @@ export default function Layout({ children }: LayoutProps) {
           display: 'flex',
           flexGrow: 1,
           flexDirection: 'column',
-          maxHeight: {
-            xs: 'calc(100vh - 56px)',
-            sm: 'calc(100vh - 64px)',
-          },
         }}
       >
         {children}
