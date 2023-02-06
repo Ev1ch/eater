@@ -11,12 +11,13 @@ export default function Fridge() {
   return (
     <Box
       sx={{
-        height: '100%',
+        maxHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         px: 1,
         py: 2,
+        overflowY: 'auto',
       }}
     >
       <Typography sx={{ mr: 'auto', mb: 2 }} variant="h2">
