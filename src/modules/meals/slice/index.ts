@@ -3,10 +3,11 @@ import { createSlice, isFulfilled } from '@reduxjs/toolkit';
 
 import { hydrate } from '@/store/actions';
 import { createAsyncThunk } from '@/store/creators';
+import { selectFridge } from '#/fridge/slice';
 import { DEFAULT_PAGE_SIZE } from '../constants';
 import { NormalizedMeal, NormalizedMealIngredient } from '../domain';
 import * as service from '../service';
-import { NormalizedMeals, normalizeMeals } from './normalization';
+import { NormalizedMeals, normalizeMeal, normalizeMeals } from './normalization';
 import {
   selectCanBeCookedNormalizedPages,
   selectCanBeCookedPageSize,
@@ -92,7 +93,6 @@ export const getMealsByIngredients = createAsyncThunk<NormalizedMealIngredient[]
     const size = selectCanBeCookedPageSize(getState());
     const pages = selectCanBeCookedNormalizedPages(getState());
     const lastId = pages.at(-1)?.meals.at(-1);
-    // @ts-expect-error
     const meals = await service.getMealsByIngredients(ingredients, {
       page: {
         lastId,
@@ -102,6 +102,39 @@ export const getMealsByIngredients = createAsyncThunk<NormalizedMealIngredient[]
     const normalizedMeals = normalizeMeals(dispatch, meals);
 
     return normalizedMeals;
+  },
+);
+
+export const getCanBeCookedMeals = createAsyncThunk<void, NormalizedMeal[]>(
+  `${name}/getCanBeCookedMeals`,
+  async (_, { dispatch, getState }) => {
+    const size = selectCanBeCookedPageSize(getState());
+    const pages = selectCanBeCookedNormalizedPages(getState());
+    const lastId = pages.at(-1)?.meals.at(-1);
+    const { ingredients } = selectFridge(getState())!;
+    const meals = await service.getMealsByIngredients(ingredients, {
+      page: {
+        lastId,
+        size,
+      },
+    });
+    const normalizedMeals = normalizeMeals(dispatch, meals);
+
+    return normalizedMeals;
+  },
+);
+
+export const getMealById = createAsyncThunk<string, NormalizedMeal | null>(
+  `${name}/getMealById`,
+  async (id, { dispatch }) => {
+    try {
+      const meal = await service.getMealById(id);
+      const normalizedMeal = normalizeMeal(dispatch, meal);
+
+      return normalizedMeal;
+    } catch (error) {
+      return null;
+    }
   },
 );
 
@@ -119,7 +152,7 @@ const slice = createSlice({
       state.orders.canBeCooked.options.page.index += 1;
     },
     setLatestNextPageIndex(state) {
-      state.orders.canBeCooked.options.page.index += 1;
+      state.orders.latest.options.page.index += 1;
     },
   },
   extraReducers(builder) {
@@ -136,7 +169,7 @@ const slice = createSlice({
           meals: payload.map(({ id }) => id),
         };
       })
-      .addCase(getMealsByIngredients.fulfilled, (state, { payload }) => {
+      .addCase(getCanBeCookedMeals.fulfilled, (state, { payload }) => {
         const { options } = state.orders.canBeCooked;
         const currentIndex = options.page.index - 1;
 
@@ -144,11 +177,21 @@ const slice = createSlice({
           meals: payload.map(({ id }) => id),
         };
       })
-      .addMatcher(isFulfilled(getLatestMeals, getMealsByIngredients), (state, { payload }) => {
-        payload.forEach((meal) => {
-          state.entities[meal.id] = meal;
-        });
-      });
+      .addMatcher(isFulfilled(getMealById), (state, { payload }) => {
+        if (!payload) {
+          return;
+        }
+
+        state.entities[payload.id] = payload;
+      })
+      .addMatcher(
+        isFulfilled(getLatestMeals, getMealsByIngredients, getCanBeCookedMeals),
+        (state, { payload }) => {
+          payload.forEach((meal) => {
+            state.entities[meal.id] = meal;
+          });
+        },
+      );
   },
 });
 
