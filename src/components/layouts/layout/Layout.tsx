@@ -42,9 +42,11 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <AppBar sx={{ position: 'static' }}>
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
-          {profile}
-          <Box>{link}</Box>
+        <Toolbar>
+          <Container sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            {profile}
+            <Box>{link}</Box>
+          </Container>
         </Toolbar>
       </AppBar>
       <Container
