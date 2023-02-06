@@ -13,20 +13,41 @@ import {
 import { Public as PublicIcon } from '@/components/icons';
 import { IngredientChip } from '#/ingredients/components/common';
 import { Meal } from '#/meals/domain';
+import { NOOP } from '@/core/constants';
 
 interface IMealCardProps {
   meal: Meal;
+  onNameClick?: (meal: Meal) => void;
+  onClick?: (meal: Meal) => void;
 }
 
 const DEFAULT_VISIBLE_INSTRUCTION_ITEMS = 2;
 
 const DEFAULT_VISIBLE_TAGS = 4;
 
-export default function MealCard({ meal }: IMealCardProps) {
+export default function MealCard({ meal, onNameClick = NOOP, onClick = NOOP }: IMealCardProps) {
+  const handleNameClick = () => {
+    onNameClick(meal);
+  };
+
+  const handleClick = () => {
+    onClick(meal);
+  };
+
   return (
-    <Card>
+    <Card onClick={handleClick}>
       <CardHeader
-        title={meal.name}
+        title={
+          // eslint-disable-next-line react/jsx-wrap-multilines
+          <Typography
+            sx={{ cursor: 'pointer' }}
+            onClick={handleNameClick}
+            variant="h5"
+            component="p"
+          >
+            {meal.name}
+          </Typography>
+        }
         subheader={
           // eslint-disable-next-line react/jsx-wrap-multilines
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
