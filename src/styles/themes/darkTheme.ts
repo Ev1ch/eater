@@ -6,6 +6,10 @@ const darkTheme = createTheme(
   mergeWithDefaultOptions({
     palette: {
       mode: 'dark',
+      primary: {
+        main: '#90caf9',
+        contrastText: 'rgba(255, 255, 255, 1)',
+      },
     },
   }),
 );
