@@ -20,7 +20,7 @@ export type GetOwnMeals = (options?: Paginated) => Promise<Meal[]>;
 
 export type AddMeal = (
   meal: Omit<NormalizedMeal, 'id' | 'ingredients'> & {
-    ingredients: Omit<NormalizedMealIngredient, 'id'>;
+    ingredients: Omit<NormalizedMealIngredient, 'id'>[];
   },
 ) => Promise<Meal>;
 
