@@ -9,6 +9,7 @@ export {
   Paper,
   Button,
   Card,
+  Divider,
   CardContent,
   CardHeader,
   FormControlLabel,
