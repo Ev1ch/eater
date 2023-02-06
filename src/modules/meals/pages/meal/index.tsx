@@ -13,7 +13,7 @@ export default function Meal() {
   const { query } = useRouter();
   const id = query.id as string;
   const meal = useSelector((state) => selectMealById(state, id));
-  const image = meal.image ?? DEFAULT_MEAL_IMAGE;
+  const image = meal?.image || DEFAULT_MEAL_IMAGE;
   const instructionsStages = chunk(meal.instructions, 4);
 
   return (
@@ -33,8 +33,8 @@ export default function Meal() {
           <Button variant="outlined">Back</Button>
         </Paper> */}
       </Box>
-      <Grid container>
-        <Grid sx={{ px: 1 }} sm={6} item>
+      <Grid container spacing={1}>
+        <Grid xs={12} sm={6} item>
           <Box sx={{ height: 400, mb: 2 }}>
             <Image
               src={image}
@@ -50,7 +50,7 @@ export default function Meal() {
             ))}
           </Stack>
         </Grid>
-        <Grid sx={{ px: 1 }} sm={6} item>
+        <Grid xs={12} sm={6} item>
           {instructionsStages.map((stage, index) => (
             // eslint-disable-next-line react/no-array-index-key
             <InstructionsStage key={index} index={index + 1} stage={stage} open={index === 0} />
