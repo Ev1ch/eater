@@ -2,16 +2,28 @@ import type { DocumentReference } from 'firebase/firestore';
 
 import { getAreaByRef } from '#/areas/service';
 import { getCategoryByRef } from '#/categories/service';
-import { getDocs, mealsCollection } from '#/firebase/firestore';
+import { getDocs, mealsCollection, getDoc, doc, query } from '#/firebase/firestore';
 import type { IngredientReference } from '#/ingredients/abstracts';
 import { getIngredientByRef } from '#/ingredients/service';
 import type { FirestoreMeal, GetMeals } from '#/meals/abstracts';
+import { getQuery } from '@/modules/firebase/utils';
 import type { Tag } from '#/tags/domain';
 import { getTagByRef } from '#/tags/service';
 import type { MealIngredient } from '../domain';
 
-const getMeals: GetMeals = async () => {
-  const snapshot = await getDocs(mealsCollection);
+const getMeals: GetMeals = async (options = {}) => {
+  const { page } = options;
+  const lastSnapshot = page?.lastId
+    ? await getDoc(doc(mealsCollection, page.lastId))
+    : undefined;
+  const queryParams = getQuery({
+      size: page?.size,
+      lastSnapshot,
+    });
+
+  const mealQuery = query(mealsCollection, ...queryParams);
+  const snapshot = await getDocs(mealQuery);
+
   const meals: FirestoreMeal[] = [];
 
   snapshot.forEach((s) => {

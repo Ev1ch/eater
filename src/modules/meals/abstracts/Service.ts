@@ -6,7 +6,10 @@ import { MealIngredient, NormalizedMeal, NormalizedMealIngredient } from '../dom
 
 export type GetMeals = (options?: Paginated) => Promise<Meal[]>;
 
-export type GetMealsFromIngredients = (ingredients: NormalizedMealIngredient[]) => Promise<Meal[]>;
+export type GetMealsFromIngredients = (
+  ingredients: NormalizedMealIngredient[],
+  options?: Paginated,
+) => Promise<Meal[]>;
 
 export type GetMissingIngredients = (
   meal: NormalizedMeal,
