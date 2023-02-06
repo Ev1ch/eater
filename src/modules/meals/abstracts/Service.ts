@@ -25,3 +25,4 @@ export type AddMeal = (
 ) => Promise<Meal>;
 
 export type GetMealByRef = (ref: DocumentReference) => Promise<Meal>;
+export type GetMealById = (id: string) => Promise<Meal>;
