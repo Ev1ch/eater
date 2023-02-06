@@ -7,9 +7,14 @@ import { Sx } from '@/styles/types';
 interface SearchPanelProps {
   onChange?: (check: boolean) => void;
   sx?: Sx;
+  disabled?: boolean;
 }
 
-export default function SearchPanel({ onChange = NOOP, sx = {} }: SearchPanelProps) {
+export default function SearchPanel({
+  onChange = NOOP,
+  sx = {},
+  disabled = false,
+}: SearchPanelProps) {
   const [isChecked, setIsChecked] = useState(false);
 
   const handleChange = (_, checked: boolean) => {
@@ -22,6 +27,7 @@ export default function SearchPanel({ onChange = NOOP, sx = {} }: SearchPanelPro
       <FormControlLabel
         control={<Switch checked={isChecked} onChange={handleChange} />}
         label="Can be cooked from my ingredients"
+        disabled={disabled}
       />
     </Paper>
   );
