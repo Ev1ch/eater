@@ -29,6 +29,9 @@ const getMealById: GetMealById = async (id) => {
     })),
   );
 
+  delete meal.categoryRef;
+  delete meal.areaRef;
+
   return meal as Meal;
 };
 
