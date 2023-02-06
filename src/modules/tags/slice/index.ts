@@ -47,7 +47,7 @@ const slice = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(hydrate, (state, { payload }) => {
-      state.entities = payload.tags.entities;
+      Object.assign(state.entities, payload.tags.entities);
     });
     builder.addMatcher(isFulfilled(getTags), (state, { payload }) => {
       const {

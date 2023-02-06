@@ -38,6 +38,16 @@ export const getMeals = createAsyncThunk<void, NormalizedMeal[]>(
   },
 );
 
+export const addMeal = createAsyncThunk<void, NormalizedMeal>(
+  `${name}`,
+  async (newMeal, { dispatch }) => {
+    const meal = service.addMeal(newMeal);
+    const normalizedMeal = normalizeMeals(dispatch, meal);
+
+    return normalizedMeal;
+  },
+);
+
 const slice = createSlice({
   name,
   initialState,
@@ -51,6 +61,9 @@ const slice = createSlice({
         payload.forEach((meal) => {
           state.entities[meal.id] = meal;
         });
+      })
+      .addCase(addMeal.fulfilled, (state, { payload }) => {
+        state.entities[payload.id] = payload;
       });
   },
 });

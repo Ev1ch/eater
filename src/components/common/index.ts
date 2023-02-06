@@ -26,7 +26,7 @@ export {
   TextField,
   Toolbar,
   Typography,
+    Fab
 } from '@mui/material';
 export { default as Image, type ImageProps } from './image';
 export { default as Link, type LinkProps } from './link';
-export { default as TextFieldConnected } from './TextFieldConnected';
