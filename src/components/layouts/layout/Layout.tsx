@@ -40,14 +40,24 @@ export default function Layout({ children }: LayoutProps) {
   );
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       <AppBar sx={{ position: 'static' }}>
         <Toolbar sx={{ justifyContent: 'space-between' }}>
           {profile}
           <Box>{link}</Box>
         </Toolbar>
       </AppBar>
-      <Container sx={{ display: 'flex', flexGrow: 1, flexDirection: 'column' }}>
+      <Container
+        sx={{
+          display: 'flex',
+          flexGrow: 1,
+          flexDirection: 'column',
+          maxHeight: {
+            xs: 'calc(100vh - 56px)',
+            sm: 'calc(100vh - 64px)',
+          },
+        }}
+      >
         {children}
       </Container>
     </Box>

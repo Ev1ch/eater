@@ -1,5 +1,5 @@
 import { useSelector } from '@/store/hooks';
-import { Box } from '@/components/common';
+import { Box, Typography } from '@/components/common';
 import { selectFridgeIngredientsTypes } from '@/modules/fridge/slice/selectors';
 
 import FridgeSection from './FridgeSection';
@@ -15,14 +15,17 @@ export default function Fridge() {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        px: 2,
-        py: 3,
+        px: 1,
+        py: 2,
       }}
     >
-      <AddIngredient sx={{ mb: 'auto' }} />
-      <Box sx={{ mb: 'auto', width: '100%' }}>
+      <Typography sx={{ mr: 'auto', mb: 2 }} variant="h2">
+        Fridge
+      </Typography>
+      <AddIngredient sx={{ mb: 'auto', width: '100%' }} />
+      <Box sx={{ mt: 'auto', width: '100%' }}>
         {types.map((type) => (
-          <FridgeSection type={type} />
+          <FridgeSection key={type.id} type={type} />
         ))}
       </Box>
     </Box>
