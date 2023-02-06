@@ -31,7 +31,6 @@ const name = 'categories';
 export const getCategories = createAsyncThunk<void, Category[]>(
   `${name}/getCategories`,
   async () => {
-    // @ts-expect-error
     const categories = await service.getCategories();
     return categories;
   },

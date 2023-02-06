@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 
 import { FormControlLabel, Paper, Switch } from '@/components/common';
 import { NOOP } from '@/core/constants';
@@ -17,7 +17,7 @@ export default function SearchPanel({
 }: SearchPanelProps) {
   const [isChecked, setIsChecked] = useState(false);
 
-  const handleChange = (_, checked: boolean) => {
+  const handleChange = (_: ChangeEvent, checked: boolean) => {
     setIsChecked(checked);
     onChange(checked);
   };

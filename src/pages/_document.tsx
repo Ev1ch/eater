@@ -49,6 +49,7 @@ Document.getInitialProps = async (ctx) => {
   const cache = createCache();
   const { extractCriticalToChunks } = createServer(cache);
 
+  // eslint-disable-next-line no-param-reassign
   ctx.renderPage = () =>
     originalRenderPage({
       enhanceApp: (App: any) =>
