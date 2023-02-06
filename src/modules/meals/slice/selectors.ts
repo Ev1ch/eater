@@ -127,3 +127,25 @@ export const selectAllLatestPagesToCurrent = createSelector(
   [selectLatestPages, selectLatestCurrentPageIndex],
   (pages, index) => pages.slice(0, index),
 );
+
+export const selectCanBeCookedHasMore = createSelector(
+  [selectCanBeCookedNormalizedPages, selectCanBeCookedPageSize],
+  (pages, size) => {
+    if (!pages.length) {
+      return true;
+    }
+
+    return pages.at(-1)!.meals.length === size;
+  },
+);
+
+export const selectLatestHasMore = createSelector(
+  [selectCanBeCookedNormalizedPages, selectLatestPageSize],
+  (pages, size) => {
+    if (!pages.length) {
+      return true;
+    }
+
+    return pages.at(-1)!.meals.length === size;
+  },
+);
