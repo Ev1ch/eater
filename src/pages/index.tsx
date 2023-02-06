@@ -14,8 +14,8 @@ export const getServerSideProps = wrapper.getServerSideProps(
       const t = await getT(locale, ['pages/home']);
       const title = t('pages/home:meta.title');
 
-      await dispatch(getCurrentUser());
-      await dispatch(getLatestMeals());
+      await dispatch(getCurrentUser()).unwrap();
+      await dispatch(getLatestMeals()).unwrap();
 
       return {
         props: {
