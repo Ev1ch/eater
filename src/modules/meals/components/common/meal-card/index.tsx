@@ -8,22 +8,46 @@ import {
   CardHeader,
   List,
   ListItem,
+  Chip,
 } from '@/components/common';
 import { Public as PublicIcon } from '@/components/icons';
 import { IngredientChip } from '#/ingredients/components/common';
 import { Meal } from '#/meals/domain';
+import { NOOP } from '@/core/constants';
 
 interface IMealCardProps {
   meal: Meal;
+  onNameClick?: (meal: Meal) => void;
+  onClick?: (meal: Meal) => void;
 }
 
 const DEFAULT_VISIBLE_INSTRUCTION_ITEMS = 2;
 
-export default function MealCard({ meal }: IMealCardProps) {
+const DEFAULT_VISIBLE_TAGS = 4;
+
+export default function MealCard({ meal, onNameClick = NOOP, onClick = NOOP }: IMealCardProps) {
+  const handleNameClick = () => {
+    onNameClick(meal);
+  };
+
+  const handleClick = () => {
+    onClick(meal);
+  };
+
   return (
-    <Card>
+    <Card onClick={handleClick}>
       <CardHeader
-        title={meal.name}
+        title={
+          // eslint-disable-next-line react/jsx-wrap-multilines
+          <Typography
+            sx={{ cursor: 'pointer' }}
+            onClick={handleNameClick}
+            variant="h5"
+            component="p"
+          >
+            {meal.name}
+          </Typography>
+        }
         subheader={
           // eslint-disable-next-line react/jsx-wrap-multilines
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -35,7 +59,7 @@ export default function MealCard({ meal }: IMealCardProps) {
           </Box>
         }
       />
-      <CardMedia component="img" image={meal.image} />
+      <CardMedia component="img" sx={{ maxHeight: 200 }} image={meal.image} />
       <CardContent>
         <List sx={{ mb: 2, listStyleType: 'disc', pl: 2 }} component="ol" disablePadding>
           {meal.instructions.slice(0, DEFAULT_VISIBLE_INSTRUCTION_ITEMS).map((instruction) => (
@@ -51,10 +75,11 @@ export default function MealCard({ meal }: IMealCardProps) {
             <ListItem disablePadding>...</ListItem>
           )}
         </List>
-        <Stack direction="row" spacing={1}>
-          {meal.ingredients.map(({ ingredient }) => (
+        <Stack direction="row" sx={{ flexWrap: 'wrap' }} gap={1}>
+          {meal.ingredients.slice(0, DEFAULT_VISIBLE_TAGS).map(({ ingredient }) => (
             <IngredientChip key={ingredient.id} ingredient={ingredient} />
           ))}
+          {meal.ingredients.length > DEFAULT_VISIBLE_TAGS && <Chip label="..." />}
         </Stack>
       </CardContent>
     </Card>
