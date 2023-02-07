@@ -22,7 +22,6 @@ import { selectAreasArray } from '#/areas/slice';
 import { selectTagsArray } from '#/tags/slice';
 import { selectCategoriesArray } from '#/categories/slice';
 import { AmountType } from '#/ingredients/domain';
-import * as service from '../../../service';
 import { Tag } from '#/tags/domain';
 import { Category } from '#/categories/domain';
 import { Area } from '#/areas/domain';
@@ -33,6 +32,7 @@ import {
   setNameNextPageIndex,
 } from '#/ingredients/slice';
 import useDispatch from '@/store/hooks/useDispatch';
+import * as service from '../../../service';
 
 interface FormValues {
   name: string;
@@ -58,7 +58,7 @@ const defaultValues = {
   ingredients: [defaultIngredientValue],
 };
 
-const MealForm = () => {
+function MealForm() {
   const dispatch = useDispatch();
   const {
     register,
@@ -158,7 +158,7 @@ const MealForm = () => {
     const ingredients = getValues('ingredients');
     dispatch(setNameNextPageIndex());
     ingredients.forEach(
-      async ({ ingredient }) => await dispatch(getIngredientsWithSearch(ingredient)),
+      async ({ ingredient }) => dispatch(getIngredientsWithSearch(ingredient)),
     );
   };
 
@@ -385,6 +385,6 @@ const MealForm = () => {
       </Button>
     </Box>
   );
-};
+}
 
 export default MealForm;

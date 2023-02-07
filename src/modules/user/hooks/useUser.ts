@@ -28,7 +28,6 @@ const useUser = ({
       return;
     }
 
-
     if (redirectIfFound) {
       router.push(redirectIfFound);
     }
