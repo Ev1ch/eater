@@ -9,6 +9,7 @@ import {
 import type { State } from '@/store/abstracts';
 import { getActionRootType } from '@/store/utils';
 import { ThemeMode } from '@/styles/types';
+import { actionsTypePrefixes } from '#/user/constants';
 
 interface UiState {
   theme: {
@@ -24,7 +25,10 @@ const initialState: UiState = {
     mode: ThemeMode.DARK,
   },
   statuses: {
-    pending: {},
+    pending: {
+      [actionsTypePrefixes.getCurrentUser]: true,
+      [actionsTypePrefixes.initAuth]: true,
+    },
   },
 };
 

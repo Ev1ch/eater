@@ -2,10 +2,16 @@ import { createSlice, isFulfilled, PayloadAction } from '@reduxjs/toolkit';
 
 import { hydrate } from '@/store/actions';
 import { createAsyncThunk } from '@/store/creators';
+import { normalize } from '#/normalization/utils';
 import { DEFAULT_PAGE_SIZE } from '../constants';
 import type { NormalizedIngredient } from '../domain';
 import * as service from '../service';
-import { NormalizedIngredients, normalizeIngredients } from './normalization';
+import {
+  NormalizedIngredients,
+  normalizeIngredients,
+  ingredientEntity,
+  NormalizedEntities,
+} from './normalization';
 import { selectNamePages, selectNamePageSize } from './selectors';
 
 interface IngredientsPage {
@@ -54,18 +60,38 @@ export const getIngredients = createAsyncThunk<void, NormalizedIngredient[]>(
   },
 );
 
-export const getIngredientsByName = createAsyncThunk<string, NormalizedIngredient[]>(
-  `${name}/getIngredientsByName`,
-  async (ingredientName, { dispatch, getState }) => {
+export const getLatestIngredients = createAsyncThunk<void, NormalizedIngredient[]>(
+  `${name}`,
+  async (_, { dispatch, getState }) => {
     const size = selectNamePageSize(getState());
     const pages = selectNamePages(getState());
-    const lastId = pages.at(-1)?.ingredients.at(-1);
-    // @ts-expect-error
-    const ingredients = await service.getIngredientsByName(ingredientName, {
+    const lastId = pages.at(-1)?.ingredients.at(-1)?.id;
+
+    const ingredients = await service.getIngredients({
       page: {
         size,
         lastId,
       },
+    });
+    const normalizedIngredients = normalizeIngredients(dispatch, ingredients);
+
+    return normalizedIngredients;
+  },
+);
+
+export const getIngredientsWithSearch = createAsyncThunk<string, NormalizedIngredient[]>(
+  `${name}/getIngredientsByName`,
+  async (search, { dispatch, getState }) => {
+    const size = selectNamePageSize(getState());
+    const pages = selectNamePages(getState());
+    const lastId = pages.at(-1)?.ingredients.at(-1)?.id;
+    // @ts-expect-error
+    const ingredients = await service.getIngredientsWithSearch({
+      page: {
+        size,
+        lastId,
+      },
+      search,
     });
     const normalizedIngredients = normalizeIngredients(dispatch, ingredients);
 
@@ -91,11 +117,21 @@ const slice = createSlice({
     },
   },
   extraReducers(builder) {
+    builder.addCase(hydrate, (state, { payload }) => {
+      Object.assign(state.entities, payload.ingredients.entities);
+      Object.assign(state.orders, payload.ingredients.orders);
+    });
     builder
-      .addCase(hydrate, (state, { payload }) => {
-        state.entities = payload.ingredients.entities;
+      .addCase(getIngredients.fulfilled, (state, { payload }) => {
+        const {
+          entities: { ingredients },
+        } = normalize<NormalizedEntities>(payload, [ingredientEntity]);
+
+        Object.values(ingredients).forEach((ingredient) => {
+          state.entities[ingredient.id] = ingredient;
+        });
       })
-      .addCase(getIngredientsByName.fulfilled, (state, { payload }) => {
+      .addCase(getIngredientsWithSearch.fulfilled, (state, { payload }) => {
         const { options } = state.orders.name;
         const currentIndex = options.page.index - 1;
 
@@ -103,15 +139,27 @@ const slice = createSlice({
           ingredients: payload.map(({ id }) => id),
         };
       })
-      .addMatcher(isFulfilled(getIngredients, getIngredientsByName), (state, { payload }) => {
-        payload.forEach((ingredient) => {
-          state.entities[ingredient.id] = ingredient;
-        });
-      });
+      .addCase(getLatestIngredients.fulfilled, (state, { payload }) => {
+        const { options } = state.orders.name;
+        const currentIndex = options.page.index - 1;
+
+        state.orders.name.pages[currentIndex] = {
+          ingredients: payload.map(({ id }) => id),
+        };
+      })
+      .addMatcher(
+        isFulfilled(getIngredients, getLatestIngredients, getIngredientsWithSearch),
+        (state, { payload }) => {
+          payload.forEach((ingredient) => {
+            state.entities[ingredient.id] = ingredient;
+          });
+        },
+      );
   },
 });
 
 const { reducer, actions } = slice;
 export const { setIngredient, setIngredients, resetNamePageIndex, setNameNextPageIndex } = actions;
 export * from './selectors';
+
 export default reducer;

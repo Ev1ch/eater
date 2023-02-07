@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { Provider } from 'react-redux';
 import Head from 'next/head';
@@ -12,6 +13,7 @@ import wrapper from '@/store';
 import { createCache } from '@/styles/cache';
 import { ThemeProvider } from '@/styles/themes';
 import { useTranslation } from '#/localization/hooks';
+import { initAuth } from '#/user/slice';
 
 interface AppProps extends NextAppProps {
   Component: Page;
@@ -27,6 +29,10 @@ export default function App({ Component, ...props }: AppProps) {
   const title = updatedProps.pageProps.title ?? t(DEFAULT_TITLE);
 
   const getLayout = Component.getLayout ?? ((page: ReactNode) => <Layout>{page}</Layout>);
+
+  useEffect(() => {
+    store.dispatch(initAuth());
+  }, []);
 
   return (
     <Provider store={store}>

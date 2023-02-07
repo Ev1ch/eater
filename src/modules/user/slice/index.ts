@@ -4,8 +4,10 @@ import { createSlice } from '@reduxjs/toolkit';
 import { hydrate } from '@/store/actions';
 import { createAsyncThunk } from '@/store/creators';
 import { getFridge, setFridge } from '#/fridge/slice';
+import { name, actionsTypePrefixes } from '../constants';
 import * as service from '../service';
 import type { User } from '../domain';
+import { selectIsSignInPending } from '#/user/slice/selectors';
 
 interface UserSlice {
   entity: User | null;
@@ -15,10 +17,8 @@ const initialState: UserSlice = {
   entity: null,
 };
 
-const name = 'user';
-
 export const getCurrentUser = createAsyncThunk<void, User | null>(
-  `${name}/getCurrentUser`,
+  actionsTypePrefixes.getCurrentUser,
   async () => {
     const user = await service.getCurrentUser();
 
@@ -26,8 +26,27 @@ export const getCurrentUser = createAsyncThunk<void, User | null>(
   },
 );
 
+export const initAuth = createAsyncThunk<void, void>(
+  actionsTypePrefixes.initAuth,
+  (_, { dispatch, getState }) => {
+    service.authStateObserver((user) => {
+      if (user) {
+        const isSignInPending = selectIsSignInPending(getState());
+
+        if (isSignInPending) {
+          return null;
+        }
+
+        dispatch(getCurrentUser());
+      } else {
+        // dispatch(getCurrentUser.fulfilled(null));
+      }
+    });
+  },
+);
+
 export const signInWithPopup = createAsyncThunk<void, User | null>(
-  `${name}/signInWithPopup`,
+  actionsTypePrefixes.signInWithPopup,
   async (_, { dispatch }) => {
     const user = await service.signInWithPopup();
 
@@ -37,7 +56,7 @@ export const signInWithPopup = createAsyncThunk<void, User | null>(
   },
 );
 
-export const signOut = createAsyncThunk(`${name}/signOut`, async (_, { dispatch }) => {
+export const signOut = createAsyncThunk(actionsTypePrefixes.signOut, async (_, { dispatch }) => {
   await service.signOut();
 
   dispatch(setFridge(null));
@@ -50,6 +69,10 @@ const slice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(hydrate, (state, { payload }) => {
+        if (state.entity) {
+          return;
+        }
+
         state.entity = payload.user.entity;
       })
       .addCase(getCurrentUser.fulfilled, (state, { payload }) => {

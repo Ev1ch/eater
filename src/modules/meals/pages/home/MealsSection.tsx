@@ -2,7 +2,8 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
-import { Box, Grid, Typography } from '@/components/common';
+import { Box, Grid, Button, Typography } from '@/components/common';
+import NextLinkComposed from '@/components/common/link';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { selectUser } from '#/user/slice';
 import { SearchPanel } from '../../components/blocks';
@@ -66,6 +67,18 @@ export default function MealsSection() {
         <Typography sx={{ mb: 2 }} variant="h2">
           Meals
         </Typography>
+        {user && (
+          <Button
+            href="/addMeal"
+            component={NextLinkComposed}
+            sx={{
+              mb: 2,
+            }}
+          >
+            <Typography color="common.black">Add meal</Typography>
+          </Button>
+        )}
+
         <SearchPanel onChange={handleCanBeCooked} disabled={!user} />
       </Box>
       <InfiniteScroll

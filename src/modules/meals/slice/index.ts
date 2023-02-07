@@ -86,6 +86,25 @@ export const getLatestMeals = createAsyncThunk<void, NormalizedMeal[]>(
     return normalizedMeals;
   },
 );
+export const getMeals = createAsyncThunk<void, NormalizedMeal[]>(
+  `${name}/getMeals`,
+  async (_, { dispatch }) => {
+    const meals = await service.getMeals();
+    const normalizedMeals = normalizeMeals(dispatch, meals);
+
+    return normalizedMeals;
+  },
+);
+
+export const addMeal = createAsyncThunk<NormalizedMeal, NormalizedMeal>(
+  `${name}`,
+  async (newMeal, { dispatch }) => {
+    const meal = await service.addMeal(newMeal);
+    const normalizedMeal = normalizeMeal(dispatch, meal);
+
+    return normalizedMeal;
+  },
+);
 
 export const getMealsByIngredients = createAsyncThunk<NormalizedMealIngredient[], NormalizedMeal[]>(
   `${name}/getMealsByIngredients`,
@@ -168,6 +187,14 @@ const slice = createSlice({
         state.orders.latest.pages[currentIndex] = {
           meals: payload.map(({ id }) => id),
         };
+      })
+      .addCase(getMeals.fulfilled, (state, { payload }) => {
+        payload.forEach((meal) => {
+          state.entities[meal.id] = meal;
+        });
+      })
+      .addCase(addMeal.fulfilled, (state, { payload }) => {
+        state.entities[payload.id] = payload;
       })
       .addCase(getCanBeCookedMeals.fulfilled, (state, { payload }) => {
         const { options } = state.orders.canBeCooked;
