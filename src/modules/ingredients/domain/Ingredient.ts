@@ -1,4 +1,5 @@
 import type { IngredientType } from '#/ingredient-types/domain';
+import Amount from './Amount';
 
 export interface IngredientBase {
   id: string;
@@ -12,4 +13,9 @@ export default interface Ingredient extends IngredientBase {
 
 export interface NormalizedIngredient extends IngredientBase {
   type: string;
+}
+
+export interface FormIngredient {
+  ingredient: string;
+  amount: Amount;
 }

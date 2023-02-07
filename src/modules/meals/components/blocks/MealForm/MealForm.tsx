@@ -23,9 +23,6 @@ import { selectTagsArray } from '#/tags/slice';
 import { selectCategoriesArray } from '#/categories/slice';
 import { AmountType } from '#/ingredients/domain';
 import * as service from '../../../service';
-import { Tag } from '#/tags/domain';
-import { Category } from '#/categories/domain';
-import { Area } from '#/areas/domain';
 import { useMount } from '#/utils/hooks';
 import {
   getIngredientsWithSearch,
@@ -33,6 +30,10 @@ import {
   setNameNextPageIndex,
 } from '#/ingredients/slice';
 import useDispatch from '@/store/hooks/useDispatch';
+import { Tag } from '#/tags/domain';
+import { Category } from '#/categories/domain';
+import { Area } from '#/areas/domain';
+import { FormIngredient } from '#/ingredients/domain/Ingredient';
 
 interface FormValues {
   name: string;
@@ -40,16 +41,13 @@ interface FormValues {
   category: Category | null;
   tags: Tag[];
   instructions: Record<'text', string>[];
-  ingredients: {
-    ingredient: string;
-    amount: { type: AmountType; value: string };
-  }[];
+  ingredients: FormIngredient[];
 }
 
 const defaultIngredientValue = { ingredient: '', amount: { type: DEFAULT_AMOUNT_TYPE, value: '' } };
 const defaultInstructionValue = { text: '' };
 
-const defaultValues = {
+const defaultValues: FormValues = {
   name: '',
   area: null,
   category: null,
@@ -172,6 +170,7 @@ const MealForm = () => {
 
   useEffect(() => {
     watch(({ ingredients }) => {
+      // @ts-ignore
       ingredients!.forEach(({ ingredient }) => {
         debouncedIngredientNameChangeHandler(ingredient!);
       });
