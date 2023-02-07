@@ -1,38 +1,67 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-net-app).
+# Eater
 
-## Getting Started
+## Stack
 
-First, run the development server:
+### Main
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+- TS
+- Next
+- MUI
+- Firebase
+- Redux
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Development
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+- Husky
+- ESLint
+- Prettier
+- Lint-staged
+- Commitlint
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Architecture
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+- public
+- src
+  - components - common atomic components which can be used in other modules
+    - common
+    - icons
+    - layouts
+  - core - basic types for pages, default pages constants
+  - environment - folder with strict environment for both parts of application
+    - client
+    - server
+  - locales - translation for localizations
+  - modules
+    - module
+      - domain - core abstract entities for module, which are base for all data flow
+      - abstracts - typing for module service logic
+        - service
+      - components
+        - common
+        - blocks
+      - pages - pages, which are module specific and are built from blocks
+      - slice
+        - index - core slice reducer, thunks, actions
+        - selectors
+        - normalization - normalization interfaces and helper thunks
+      - constants
+  - pages
+  - store - main reducer with custom wrappers for basic Redux utils
+  - styles - core styles processing: default styles, themes, utils, caching
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Scripts
 
-## Learn More
+- dev
+- start
+- build
+- lint
+- eslint
+- eslint:fix
+- prettier
+- prettier:fix
+- prepare
 
-To learn more about Next.js, take a look at the following resources:
+## Routes
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- / - home page
+- /:id - meal page
