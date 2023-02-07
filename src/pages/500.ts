@@ -1,14 +1,13 @@
-import { GetStaticProps } from 'next';
-
 import { HOME_PAGE_URL } from '@/core/constants';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 export default function ServerError() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push(HOME_PAGE_URL);
+  }, [router]);
+
   return null;
 }
-
-export const getStaticProps: GetStaticProps = () => ({
-  redirect: {
-    destination: HOME_PAGE_URL,
-    permanent: false,
-  },
-});
