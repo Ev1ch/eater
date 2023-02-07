@@ -1,38 +1,80 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-net-app).
+# Eater
 
-## Getting Started
+## Stack
 
-First, run the development server:
+### Main
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+- Node.js v16
+- TS
+- Next
+- MUI
+- Firebase
+- Redux
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Development
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+- Husky
+- ESLint
+- Prettier
+- Lint-staged
+- Commitlint
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+### Working flow
+The client makes a request to the server by executing a function from services. They simulate the work of a full-fledged backend, and are used to obtain data from the database and bring them to the correct appearance according to the created interfaces. Next, the client uses this data to display changes on the page, normalizes them (for example, leaves only its unique identifier from the Category entity) and adds this data to Redux, from where it will be operated on in the future.
+The database was decided to use Firestore from Firebase, because it does not need to be hosted separately and development with it is very easy. The database contains all the main entities and their attributes
+We also used Google Provider authorization from Firebase, because it is also incredibly easy.
+To host the application, we used the Vercel service, because it is free for us + it is developed by the same team as the Next.JS framework, which makes them perfectly compatible
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## To run the app
+1. `git clone git@github.com:Ev1ch/eater.git`
+2. `yarn install --frozen-lockfile` (need to install yarn if you don't have it)
+3. `yarn start`
+4. Go to `http://localhost:3000`
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Architecture
 
-## Learn More
+- public
+- src
+  - components - common atomic components which can be used in other modules
+    - common
+    - icons
+    - layouts
+  - core - basic types for pages, default pages constants
+  - environment - folder with strict environment for both parts of application
+    - client
+    - server
+  - locales - translation for localizations
+  - modules
+    - module
+      - domain - core abstract entities for module, which are base for all data flow
+      - abstracts - typing for module service logic
+        - service
+      - components
+        - common
+        - blocks
+      - pages - pages, which are module specific and are built from blocks
+      - slice
+        - index - core slice reducer, thunks, actions
+        - selectors
+        - normalization - normalization interfaces and helper thunks
+      - constants
+  - pages - Next JS page router
+  - store - main reducer with custom wrappers for basic Redux utils
+  - styles - core styles processing: default styles, themes, utils, caching
 
-To learn more about Next.js, take a look at the following resources:
+## Scripts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- dev
+- start
+- build
+- lint
+- eslint
+- eslint:fix
+- prettier
+- prettier:fix
+- prepare
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Routes
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- / - home page
+- /:id - meal page

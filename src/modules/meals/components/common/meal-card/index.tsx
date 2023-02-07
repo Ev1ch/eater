@@ -75,7 +75,7 @@ export default function MealCard({
           </Box>
         }
       />
-      <CardMedia component="img" sx={{ maxHeight: 200 }} image={image} />
+      <CardMedia component="img" sx={{ maxHeight: 200 }} alt={meal.name} image={image} />
       <CardContent>
         <List sx={{ mb: 2, listStyleType: 'disc', pl: 2 }} component="ol" disablePadding>
           {meal.instructions.slice(0, DEFAULT_VISIBLE_INSTRUCTION_ITEMS).map((instruction) => (
