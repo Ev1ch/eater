@@ -5,11 +5,10 @@ import { getAreas } from '#/areas/slice';
 import { getTags } from '#/tags/slice';
 import { getCategories } from '#/categories/slice';
 import { getLatestIngredients } from '#/ingredients/slice';
-import { getCurrentUser } from '#/user/slice';
 import { useUser } from '#/user/hooks';
 import wrapper from '@/store';
 
-const AddMealPage = () => {
+function AddMealPage() {
   useUser({ redirectTo: '/' });
 
   return (
@@ -20,7 +19,7 @@ const AddMealPage = () => {
       <AddMeal />
     </>
   );
-};
+}
 
 export const getStaticProps = wrapper.getStaticProps(({ dispatch }) => async () => {
   await dispatch(getLatestIngredients()).unwrap();

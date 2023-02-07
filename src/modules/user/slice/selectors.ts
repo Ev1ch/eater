@@ -6,7 +6,7 @@ export const selectIsAuthPending = createPendingSelector([
     actionsTypePrefixes.getCurrentUser,
     actionsTypePrefixes.initAuth,
 
-])
+]);
 export const selectIsSignInPending = createPendingSelector([actionsTypePrefixes.signInWithPopup]);
 
 export const selectUser = (state: State) => state.user.entity;

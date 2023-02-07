@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { debounce } from '@mui/material';
 
 import {
@@ -56,7 +56,7 @@ const defaultValues: FormValues = {
   ingredients: [defaultIngredientValue],
 };
 
-const MealForm = () => {
+function MealForm() {
   const dispatch = useDispatch();
   const {
     register,
@@ -116,6 +116,7 @@ const MealForm = () => {
         ) => {
           const ingredientId = ingredients.find(({ name }) => name === ingredient)!.id;
 
+          // eslint-disable-next-line no-param-reassign
           accumulator = [
             ...accumulator,
             {
@@ -156,7 +157,7 @@ const MealForm = () => {
     const ingredients = getValues('ingredients');
     dispatch(setNameNextPageIndex());
     ingredients.forEach(
-      async ({ ingredient }) => await dispatch(getIngredientsWithSearch(ingredient)),
+      async ({ ingredient }) => dispatch(getIngredientsWithSearch(ingredient)),
     );
   };
 
@@ -384,6 +385,6 @@ const MealForm = () => {
       </Button>
     </Box>
   );
-};
+}
 
 export default MealForm;

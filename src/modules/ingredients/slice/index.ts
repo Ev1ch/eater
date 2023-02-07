@@ -85,7 +85,6 @@ export const getIngredientsWithSearch = createAsyncThunk<string, NormalizedIngre
     const size = selectNamePageSize(getState());
     const pages = selectNamePages(getState());
     const lastId = pages.at(-1)?.ingredients.at(-1)?.id;
-    // @ts-expect-error
     const ingredients = await service.getIngredientsWithSearch({
       page: {
         size,
