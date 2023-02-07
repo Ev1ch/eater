@@ -6,12 +6,23 @@ import { Ingredient } from '../domain';
 
 const getIngredientsWithSearch: GetIngredientWithSearch = async (options = { search: '' }) => {
   const { page, search } = options;
-  const searchParam: string = `${search}\uf8ff`;
-
+  const parseSearchString = (text: string): string => {
+    const parsedText = text
+      .split('')
+      .map((s, i) => {
+        if (i === 0) {
+          return s.toUpperCase();
+        }
+        return s.toLowerCase();
+      })
+      .join('');
+    return `${parsedText}\uf8ff`;
+  };
+  const parsedSearchParam = parseSearchString(search);
   const lastSnapshot = page?.lastId
     ? await getDoc(doc(ingredientsCollection, page.lastId))
     : undefined;
-  const searchParams = [where('name', '>=', search), where('name', '<=', searchParam)];
+  const searchParams = [where('name', '>=', search), where('name', '<=', parsedSearchParam)];
   const queryParams = [
     ...searchParams,
     ...getQuery({
@@ -38,5 +49,4 @@ const getIngredientsWithSearch: GetIngredientWithSearch = async (options = { sea
 
   return ingredients;
 };
-
 export default getIngredientsWithSearch;
