@@ -1,3 +1,4 @@
+/* eslint-disable no-cond-assign */
 /* eslint-disable no-await-in-loop */
 import { getIngredientById } from '#/ingredients/service';
 import type { GetMealsFromIngredients } from '#/meals/abstracts';
@@ -58,7 +59,7 @@ const getMealsByIngredients: GetMealsFromIngredients = async (ingredients, optio
       }
     }
 
-    return res;
+    return res.filter((r) => r);
   }
   const meals = await getMeals();
 
