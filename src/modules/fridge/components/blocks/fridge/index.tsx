@@ -1,24 +1,31 @@
 import { useSelector } from '@/store/hooks';
 import { Box, Typography } from '@/components/common';
 import { selectFridgeIngredientsTypes } from '@/modules/fridge/slice/selectors';
-
+import type { Sx } from '@/styles/types';
 import FridgeSection from './FridgeSection';
 import AddIngredient from './AddIngredient';
 
-export default function Fridge() {
+interface FridgeProps {
+  sx?: Sx;
+}
+
+export default function Fridge({ sx = {} }: FridgeProps) {
   const types = useSelector(selectFridgeIngredientsTypes);
 
   return (
     <Box
-      sx={{
-        maxHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        px: 1,
-        py: 2,
-        overflowY: 'auto',
-      }}
+      sx={[
+        {
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          px: 1,
+          py: 2,
+          overflowY: 'auto',
+          bgcolor: 'background.default',
+        },
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
     >
       <Typography sx={{ mr: 'auto', mb: 2 }} variant="h2">
         Fridge

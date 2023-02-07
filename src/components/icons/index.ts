@@ -1,1 +1,1 @@
-export { Public, ExpandMore, Delete, Add } from '@mui/icons-material';
+export { Public, ExpandMore, Delete, Add, ExpandLess } from '@mui/icons-material';

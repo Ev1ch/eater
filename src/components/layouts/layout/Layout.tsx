@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import type { ReactNode } from 'react';
 
-import { AppBar, Box, Container, Toolbar, Link, Typography } from '@/components/common';
+import { AppBar, Box, Container, Toolbar, Link, Typography, Divider } from '@/components/common';
 import { useDispatch, useSelector } from '@/store/hooks';
 import { selectUser, signInWithPopup, signOut } from '@/modules/user/slice';
 
@@ -22,19 +22,22 @@ export default function Layout({ children }: LayoutProps) {
   };
 
   const link = user ? (
-    <Link sx={{ color: 'primary.contrastText' }} href="" onClick={handleSignOut}>
+    <Link href="" onClick={handleSignOut}>
       Sign out
     </Link>
   ) : (
-    <Link sx={{ color: 'primary.contrastText' }} href="" onClick={handleSignIn}>
+    <Link href="" onClick={handleSignIn}>
       Sign in
     </Link>
   );
 
   const profile = user ? (
-    <Box>
-      <Typography>{user.fullName}</Typography>
-    </Box>
+    <>
+      <Box sx={{ ml: 'auto' }}>
+        <Typography>{user.fullName}</Typography>
+      </Box>
+      <Divider sx={{ mx: 2 }} orientation="vertical" flexItem />
+    </>
   ) : (
     <Box />
   );
@@ -42,9 +45,12 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <AppBar sx={{ position: 'static' }}>
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
-          {profile}
-          <Box>{link}</Box>
+        <Toolbar>
+          <Container sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Link href="/">Home</Link>
+            {profile}
+            <Box>{link}</Box>
+          </Container>
         </Toolbar>
       </AppBar>
       <Container

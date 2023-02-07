@@ -1,1 +1,1 @@
-export { default as FirebaseUser } from './FirebaseUser';
+export type { default as FirebaseUser } from './FirebaseUser';

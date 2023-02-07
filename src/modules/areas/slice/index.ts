@@ -29,7 +29,6 @@ const initialState: AreasState = {
 const name = 'areas';
 
 export const getAreas = createAsyncThunk<void, Area[]>(`${name}/getAreas`, async () => {
-  // @ts-expect-error
   const areas = await service.getAreas();
   return areas;
 });

@@ -29,7 +29,6 @@ const initialState: TagsState = {
 const name = 'tags';
 
 export const getTags = createAsyncThunk<void, Tag[]>(`${name}/getTags`, async () => {
-  // @ts-expect-error
   const tags = await service.getTags();
   return tags;
 });
