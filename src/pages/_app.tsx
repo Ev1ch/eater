@@ -12,7 +12,7 @@ import wrapper from '@/store';
 import { createCache } from '@/styles/cache';
 import { ThemeProvider } from '@/styles/themes';
 import { useTranslation } from '#/localization/hooks';
-// import environment from '@/environment/server';
+import environment from '@/environment/server';
 
 interface AppProps extends NextAppProps {
   Component: Page;
