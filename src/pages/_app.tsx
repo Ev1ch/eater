@@ -3,7 +3,6 @@ import { Provider } from 'react-redux';
 import Head from 'next/head';
 import type { AppProps as NextAppProps } from 'next/app';
 import { CacheProvider, EmotionCache } from '@emotion/react';
-
 import type { Page } from '@/core/domain';
 import { DEFAULT_TITLE } from '@/core/constants';
 import { Layout } from '@/components/layouts';
@@ -12,8 +11,7 @@ import wrapper from '@/store';
 import { createCache } from '@/styles/cache';
 import { ThemeProvider } from '@/styles/themes';
 import { useTranslation } from '#/localization/hooks';
-// import environment from '@/environment/server';
-import getIngredientsWithSearch from '../modules/ingredients/service/getIngredientsWithSearch';
+import environment from '@/environment/server';
 
 interface AppProps extends NextAppProps {
   Component: Page;
@@ -29,10 +27,6 @@ export default function App({ Component, ...props }: AppProps) {
   const title = updatedProps.pageProps.title ?? t(DEFAULT_TITLE);
 
   const getLayout = Component.getLayout ?? ((page: ReactNode) => <Layout>{page}</Layout>);
-
-  (async () => {
-    console.log(await getIngredientsWithSearch({ page: { size: 20 }, search: 'L' }));
-  })();
 
   return (
     <Provider store={store}>
