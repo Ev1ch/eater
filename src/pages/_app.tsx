@@ -4,7 +4,6 @@ import { Provider } from 'react-redux';
 import Head from 'next/head';
 import type { AppProps as NextAppProps } from 'next/app';
 import { CacheProvider, EmotionCache } from '@emotion/react';
-
 import type { Page } from '@/core/domain';
 import { DEFAULT_TITLE } from '@/core/constants';
 import { Layout } from '@/components/layouts';
