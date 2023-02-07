@@ -29,7 +29,7 @@ export const getCurrentUser = createAsyncThunk<void, User | null>(
 export const initAuth = createAsyncThunk<void, void>(
   actionsTypePrefixes.initAuth,
   (_, { dispatch, getState }) => {
-    service.authStateObserver((user) => {
+    service.authStateObserver(async (user) => {
       if (user) {
         const isSignInPending = selectIsSignInPending(getState());
 
@@ -37,6 +37,7 @@ export const initAuth = createAsyncThunk<void, void>(
           return null;
         }
 
+        await dispatch(getFridge()).unwrap();
         dispatch(getCurrentUser());
       } else {
         // dispatch(getCurrentUser.fulfilled(null));
