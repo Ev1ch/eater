@@ -26,6 +26,16 @@ export const getCurrentUser = createAsyncThunk<void, User | null>(
   },
 );
 
+export const initAuth = createAsyncThunk<void, void>(`${name}`, (_, { dispatch }) => {
+  service.authStateObserver((user) => {
+    if (user) {
+      dispatch(getCurrentUser());
+    } else {
+      dispatch(getCurrentUser.fulfilled(null));
+    }
+  });
+});
+
 export const signInWithPopup = createAsyncThunk<void, User | null>(
   `${name}/signInWithPopup`,
   async (_, { dispatch }) => {

@@ -118,6 +118,7 @@ const slice = createSlice({
   extraReducers(builder) {
     builder.addCase(hydrate, (state, { payload }) => {
       Object.assign(state.entities, payload.ingredients.entities);
+      Object.assign(state.orders, payload.ingredients.orders);
     });
     builder
       .addCase(getIngredients.fulfilled, (state, { payload }) => {
@@ -137,7 +138,15 @@ const slice = createSlice({
           ingredients: payload.map(({ id }) => id),
         };
       })
-      .addMatcher(isFulfilled(getIngredients, getIngredientsByName, getLatestIngredients), (state, { payload }) => {
+      .addCase(getLatestIngredients.fulfilled, (state, { payload }) => {
+        const { options } = state.orders.name;
+        const currentIndex = options.page.index - 1;
+
+        state.orders.name.pages[currentIndex] = {
+          ingredients: payload.map(({ id }) => id),
+        };
+      })
+      .addMatcher(isFulfilled(getIngredients, getLatestIngredients, getIngredientsByName), (state, { payload }) => {
         payload.forEach((ingredient) => {
           state.entities[ingredient.id] = ingredient;
         });

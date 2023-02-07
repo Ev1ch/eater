@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { debounce } from '@mui/material';
 
 import {
@@ -16,7 +16,7 @@ import { Add, Delete } from '@/components/icons';
 import { Controller } from '#/forms/components';
 import { useForm, useFieldArray } from '#/forms/hooks';
 import { useSelector } from '@/store/hooks';
-import { selectIngredientsArray } from '#/ingredients/slice/selectors';
+import { selectNamePagesToCurrent } from '#/ingredients/slice/selectors';
 import { AMOUNT_TYPE_TO_NAME, DEFAULT_AMOUNT_TYPE } from '#/fridge/constants';
 import { selectAreasArray } from '#/areas/slice';
 import { selectTagsArray } from '#/tags/slice';
@@ -36,8 +36,8 @@ import useDispatch from '@/store/hooks/useDispatch';
 
 interface FormValues {
   name: string;
-  area: Area;
-  category: Category;
+  area: Area | null;
+  category: Category | null;
   tags: Tag[];
   instructions: Record<'text', string>[];
   ingredients: {
@@ -63,8 +63,8 @@ const MealForm = () => {
   } = useForm<FormValues>({
     defaultValues: {
       name: '',
-      area: {},
-      category: {},
+      area: null,
+      category: null,
       tags: [],
       instructions: [defaultInstructionValue],
       ingredients: [defaultIngredientValue],
@@ -87,7 +87,12 @@ const MealForm = () => {
     name: 'instructions',
   });
 
-  const ingredients = useSelector(selectIngredientsArray);
+  const pages = useSelector(selectNamePagesToCurrent);
+  const ingredients = useMemo(
+    () => pages.map(({ ingredients: currentIngredients }) => currentIngredients).flat(1),
+    [pages],
+  );
+
   const categories = useSelector(selectCategoriesArray);
   const areas = useSelector(selectAreasArray);
   const tags = useSelector(selectTagsArray);
@@ -97,22 +102,44 @@ const MealForm = () => {
     area,
     instructions,
     tags,
-    ingredients,
+    ingredients: selectedIngredients,
     category,
   }: FormValues) => {
     try {
+      const formattedIngredients = selectedIngredients.reduce(
+        (
+          accumulator: {
+            ingredient: string;
+            amount: { type: AmountType; value: string };
+          }[],
+          { ingredient, ...other },
+        ) => {
+          const ingredientId = ingredients.find(({ name }) => name === ingredient)!.id;
+
+          accumulator = [
+            ...accumulator,
+            {
+              ingredient: ingredientId,
+              ...other,
+            },
+          ];
+
+          return accumulator;
+        },
+        [],
+      );
+
       await service.addMeal({
         name,
-        area: area.id,
-        category: category.id,
+        area: area!.id,
+        category: category!.id,
         tags: tags.map(({ id }) => id),
         instructions: instructions.map(({ text }) => text),
-        ingredients,
+        ingredients: formattedIngredients,
       });
       reset();
     } catch (e) {
       // TODO: Add errors handling
-      console.log('ERROR', e);
     }
   };
   const handleIngredientNameChange = async (name: string) => {
@@ -281,32 +308,44 @@ const MealForm = () => {
           mb: 2,
         }}
       >
-        <Autocomplete
-          {...register('category')}
-          options={categories}
-          getOptionLabel={(option) => option.name}
-          renderOption={(props, option) => (
-            <Box {...props} key={option.id} component="li">
-              {option.name}
-            </Box>
+        <Controller
+          name="category"
+          control={control}
+          render={({ field }) => (
+            <Autocomplete
+              {...field}
+              options={categories}
+              getOptionLabel={(option) => option.name}
+              renderOption={(props, option) => (
+                <Box {...props} key={option.id} component="li">
+                  {option.name}
+                </Box>
+              )}
+              renderInput={(params) => <TextField {...params} label="Categories" />}
+              onChange={(_, value) => setValue('category', value!)}
+              disablePortal
+              filterSelectedOptions
+            />
           )}
-          renderInput={(params) => <TextField {...params} label="Categories" />}
-          onChange={(_, value) => setValue('category', value!)}
-          disablePortal
-          filterSelectedOptions
         />
-        <Autocomplete
-          {...register('area')}
-          options={areas}
-          getOptionLabel={(option) => option.name}
-          renderOption={(props, option) => (
-            <Box {...props} key={option.id} component="li">
-              {option.name}
-            </Box>
+        <Controller
+          name="area"
+          control={control}
+          render={({ field }) => (
+            <Autocomplete
+              {...field}
+              options={areas}
+              getOptionLabel={(option) => option.name}
+              renderOption={(props, option) => (
+                <Box {...props} key={option.id} component="li">
+                  {option.name}
+                </Box>
+              )}
+              renderInput={(params) => <TextField {...params} label="Area" />}
+              onChange={(_, value) => setValue('area', value!)}
+              disablePortal
+            />
           )}
-          renderInput={(params) => <TextField {...params} label="Area" />}
-          onChange={(_, value) => setValue('area', value!)}
-          disablePortal
         />
         <Controller
           name="tags"
