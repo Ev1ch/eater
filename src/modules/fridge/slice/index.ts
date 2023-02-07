@@ -73,6 +73,10 @@ const slice = createSlice({
           fridge: { entity },
         } = payload;
 
+        if (!entity) {
+          return;
+        }
+
         state.entity = entity;
       })
       .addCase(getFridge.fulfilled, (state, { payload }) => {
