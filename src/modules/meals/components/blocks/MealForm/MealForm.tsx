@@ -1,3 +1,6 @@
+import { useCallback, useEffect } from 'react';
+import { debounce } from '@mui/material';
+
 import {
   Autocomplete,
   Box,
@@ -23,13 +26,20 @@ import * as service from '../../../service';
 import { Tag } from '#/tags/domain';
 import { Category } from '#/categories/domain';
 import { Area } from '#/areas/domain';
+import { useMount } from '#/utils/hooks';
+import {
+  getIngredientsByName,
+  resetNamePageIndex,
+  setNameNextPageIndex,
+} from '#/ingredients/slice';
+import useDispatch from '@/store/hooks/useDispatch';
 
-interface InitialValues {
+interface FormValues {
   name: string;
   area: Area;
   category: Category;
   tags: Tag[];
-  instructions: Record<string, string>[];
+  instructions: Record<'text', string>[];
   ingredients: {
     ingredient: string;
     amount: { type: AmountType; value: string };
@@ -40,13 +50,17 @@ const defaultIngredientValue = { ingredient: '', amount: { type: DEFAULT_AMOUNT_
 const defaultInstructionValue = { text: '' };
 
 const MealForm = () => {
+  const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
     formState: { isSubmitting },
+    getValues,
     setValue,
     control,
-  } = useForm<InitialValues>({
+    reset,
+    watch,
+  } = useForm<FormValues>({
     defaultValues: {
       name: '',
       area: {},
@@ -78,15 +92,65 @@ const MealForm = () => {
   const areas = useSelector(selectAreasArray);
   const tags = useSelector(selectTagsArray);
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async ({
+    name,
+    area,
+    instructions,
+    tags,
+    ingredients,
+    category,
+  }: FormValues) => {
     try {
-      // await service.addMeal({
-      //
-      // })
-    } catch {}
+      await service.addMeal({
+        name,
+        area: area.id,
+        category: category.id,
+        tags: tags.map(({ id }) => id),
+        instructions: instructions.map(({ text }) => text),
+        ingredients,
+      });
+      reset();
+    } catch (e) {
+      // TODO: Add errors handling
+      console.log('ERROR', e);
+    }
   };
-  const handleAddIngredient = (data) => {};
+  const handleIngredientNameChange = async (name: string) => {
+    dispatch(resetNamePageIndex());
+    await dispatch(getIngredientsByName(name));
+  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedIngredientNameChangeHandler = useCallback(
+    debounce(handleIngredientNameChange, 500),
+    [],
+  );
+
+  const handleLoadMoreIngredients = async () => {
+    const ingredients = getValues('ingredients');
+    dispatch(setNameNextPageIndex());
+    ingredients.forEach(async ({ ingredient }) => await dispatch(getIngredientsByName(ingredient)));
+  };
+
+  const handleIngredientsScroll = (event: React.SyntheticEvent) => {
+    const listboxNode = event.currentTarget;
+
+    if (listboxNode.scrollTop + listboxNode.clientHeight === listboxNode.scrollHeight) {
+      handleLoadMoreIngredients();
+    }
+  };
+
+  useEffect(() => {
+    watch(({ ingredients }) => {
+      ingredients!.forEach(({ ingredient }) => {
+        debouncedIngredientNameChangeHandler(ingredient!);
+      });
+    });
+  }, [watch, debouncedIngredientNameChangeHandler]);
+
+  useMount(async () => {
+    const { ingredient } = getValues('ingredients.0');
+    await handleIngredientNameChange(ingredient);
+  });
 
   return (
     <Box onSubmit={handleSubmit(onSubmit)} component="form">
@@ -130,6 +194,9 @@ const MealForm = () => {
                       required
                     />
                   )}
+                  ListboxProps={{
+                    onScroll: handleIngredientsScroll,
+                  }}
                   disablePortal
                 />
                 <Box sx={{ display: 'flex', mt: 1 }}>
@@ -229,6 +296,7 @@ const MealForm = () => {
           filterSelectedOptions
         />
         <Autocomplete
+          {...register('area')}
           options={areas}
           getOptionLabel={(option) => option.name}
           renderOption={(props, option) => (
@@ -236,7 +304,7 @@ const MealForm = () => {
               {option.name}
             </Box>
           )}
-          renderInput={(params) => <TextField {...params} {...register('area')} label="Area" />}
+          renderInput={(params) => <TextField {...params} label="Area" />}
           onChange={(_, value) => setValue('area', value!)}
           disablePortal
         />
