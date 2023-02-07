@@ -61,6 +61,12 @@ export default function MealsSection() {
     }
   }, [pages, canBeCooked, getMeals]);
 
+  useEffect(() => {
+    if (!user) {
+      setCanBeCooked(false);
+    }
+  }, [user]);
+
   return (
     <Box sx={{ py: 2 }}>
       <Box sx={{ mb: 2, position: 'sticky', top: 0, bgcolor: 'background.default', zIndex: 1 }}>
