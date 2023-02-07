@@ -4,7 +4,9 @@ import { MealForm } from '#/meals/components/blocks';
 const AddMeal = () => {
   return (
     <Box>
-      <Typography variant="h1">Add meal</Typography>
+      <Typography variant="h3" sx={{
+          my: 2
+      }}>Add meal</Typography>
       <MealForm />
     </Box>
   );

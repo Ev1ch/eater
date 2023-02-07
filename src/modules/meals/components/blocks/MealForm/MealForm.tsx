@@ -10,7 +10,7 @@ import {
   TextField,
   Stack,
   Button,
-  Fab,
+  IconButton,
 } from '@/components/common';
 import { Add, Delete } from '@/components/icons';
 import { Controller } from '#/forms/components';
@@ -180,7 +180,13 @@ const MealForm = () => {
   });
 
   return (
-    <Box onSubmit={handleSubmit(onSubmit)} component="form">
+    <Box
+      onSubmit={handleSubmit(onSubmit)}
+      component="form"
+      sx={{
+        pb: 2,
+      }}
+    >
       <TextField
         {...register('name')}
         label="Meal name"
@@ -244,7 +250,7 @@ const MealForm = () => {
                   </FormControl>
                 </Box>
               </Box>
-              <Fab
+              <IconButton
                 sx={{
                   ml: 2,
                 }}
@@ -252,17 +258,17 @@ const MealForm = () => {
                 onClick={() => removeIngredient(index)}
               >
                 <Delete />
-              </Fab>
+              </IconButton>
             </Box>
           ))}
         </Stack>
-        <Fab
+        <IconButton
           sx={{ mb: 2, mt: 1 }}
           size="small"
           onClick={() => appendIngredient(defaultIngredientValue)}
         >
           <Add />
-        </Fab>
+        </IconButton>
       </Box>
 
       <Box
@@ -273,13 +279,14 @@ const MealForm = () => {
         <Stack spacing={1}>
           {instructionsFields.map((item, index) => (
             <Box
+              key={index} // order do not change, fields are appending, performance will be ok
               sx={{
                 display: 'flex',
                 alignItems: 'center',
               }}
             >
               <TextField {...register(`instructions.${index}.text`)} label="Cooking instruction" />
-              <Fab
+              <IconButton
                 sx={{
                   ml: 2,
                 }}
@@ -287,11 +294,11 @@ const MealForm = () => {
                 onClick={() => removeInstruction(index)}
               >
                 <Delete />
-              </Fab>
+              </IconButton>
             </Box>
           ))}
         </Stack>
-        <Fab
+        <IconButton
           sx={{
             mt: 1,
           }}
@@ -299,7 +306,7 @@ const MealForm = () => {
           onClick={() => appendInstruction(defaultInstructionValue)}
         >
           <Add />
-        </Fab>
+        </IconButton>
       </Box>
 
       <Stack

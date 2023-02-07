@@ -39,7 +39,7 @@ export const initAuth = createAsyncThunk<void, void>(
 
         dispatch(getCurrentUser());
       } else {
-        dispatch(getCurrentUser.fulfilled(null));
+        // dispatch(getCurrentUser.fulfilled(null));
       }
     });
   },
@@ -69,6 +69,10 @@ const slice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(hydrate, (state, { payload }) => {
+        if (state.entity) {
+          return;
+        }
+
         state.entity = payload.user.entity;
       })
       .addCase(getCurrentUser.fulfilled, (state, { payload }) => {

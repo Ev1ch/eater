@@ -1,5 +1,4 @@
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 
 import AddMeal from '#/meals/components/pages/AddMeal';
 import { getAreas } from '#/areas/slice';
@@ -11,7 +10,7 @@ import { useUser } from '#/user/hooks';
 import wrapper from '@/store';
 
 const AddMealPage = () => {
-  useUser({redirectTo: '/'});
+  useUser({ redirectTo: '/' });
 
   return (
     <>
@@ -24,7 +23,6 @@ const AddMealPage = () => {
 };
 
 export const getStaticProps = wrapper.getStaticProps(({ dispatch }) => async () => {
-  await dispatch(getCurrentUser()).unwrap();
   await dispatch(getLatestIngredients()).unwrap();
   await dispatch(getCategories());
   await dispatch(getAreas());
