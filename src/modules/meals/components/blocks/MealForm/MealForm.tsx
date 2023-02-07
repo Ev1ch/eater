@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { debounce } from '@mui/material';
 
 import {
@@ -118,6 +118,7 @@ function MealForm() {
         ) => {
           const ingredientId = ingredients.find(({ name }) => name === ingredient)!.id;
 
+          // eslint-disable-next-line no-param-reassign
           accumulator = [
             ...accumulator,
             {
