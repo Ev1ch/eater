@@ -16,7 +16,7 @@ import type { Sx } from '@/styles/types';
 import { DEFAULT_AMOUNT_TYPE, AMOUNT_TYPE_TO_NAME } from '#/fridge/constants';
 import { addFridgeIngredient } from '#/fridge/slice';
 import {
-  getIngredientsByName,
+  getIngredientsWithSearch,
   resetNamePageIndex,
   selectNamePagesToCurrent,
   setNameNextPageIndex,
@@ -51,9 +51,9 @@ export default function AddIngredient({ sx = {} }: AddIngredientProps) {
     formState: { isSubmitting },
     watch,
   } = useForm({ defaultValues });
-  const handleIngredientNameChange = async (name: string) => {
+  const handleIngredientNameChange = async (searchVal: string) => {
     dispatch(resetNamePageIndex());
-    await dispatch(getIngredientsByName(name));
+    await dispatch(getIngredientsWithSearch(searchVal));
   };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedIngredientNameChangeHandler = useCallback(
@@ -79,7 +79,7 @@ export default function AddIngredient({ sx = {} }: AddIngredientProps) {
   const handleLoadMoreIngredients = async () => {
     const name = getValues('ingredient');
     dispatch(setNameNextPageIndex());
-    await dispatch(getIngredientsByName(name));
+    await dispatch(getIngredientsWithSearch(name));
   };
 
   const handleIngredientsScroll = (event: React.SyntheticEvent) => {

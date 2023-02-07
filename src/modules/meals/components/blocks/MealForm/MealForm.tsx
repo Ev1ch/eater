@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { debounce } from '@mui/material';
 
 import {
@@ -28,7 +28,7 @@ import { Category } from '#/categories/domain';
 import { Area } from '#/areas/domain';
 import { useMount } from '#/utils/hooks';
 import {
-  getIngredientsByName,
+  getIngredientsWithSearch,
   resetNamePageIndex,
   setNameNextPageIndex,
 } from '#/ingredients/slice';
@@ -49,6 +49,15 @@ interface FormValues {
 const defaultIngredientValue = { ingredient: '', amount: { type: DEFAULT_AMOUNT_TYPE, value: '' } };
 const defaultInstructionValue = { text: '' };
 
+const defaultValues = {
+  name: '',
+  area: null,
+  category: null,
+  tags: [],
+  instructions: [defaultInstructionValue],
+  ingredients: [defaultIngredientValue],
+};
+
 const MealForm = () => {
   const dispatch = useDispatch();
   const {
@@ -61,14 +70,7 @@ const MealForm = () => {
     reset,
     watch,
   } = useForm<FormValues>({
-    defaultValues: {
-      name: '',
-      area: null,
-      category: null,
-      tags: [],
-      instructions: [defaultInstructionValue],
-      ingredients: [defaultIngredientValue],
-    },
+    defaultValues,
   });
   const {
     fields: ingredientsFields,
@@ -142,23 +144,25 @@ const MealForm = () => {
       // TODO: Add errors handling
     }
   };
-  const handleIngredientNameChange = async (name: string) => {
+  const handleIngredientNameChange = (name: string) => async () => {
     dispatch(resetNamePageIndex());
-    await dispatch(getIngredientsByName(name));
+    await dispatch(getIngredientsWithSearch(name));
   };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedIngredientNameChangeHandler = useCallback(
-    debounce(handleIngredientNameChange, 500),
+    (ingredient: string) => debounce(handleIngredientNameChange(ingredient), 500),
     [],
   );
 
-  const handleLoadMoreIngredients = async () => {
+  const handleLoadMoreIngredients = () => async () => {
     const ingredients = getValues('ingredients');
     dispatch(setNameNextPageIndex());
-    ingredients.forEach(async ({ ingredient }) => await dispatch(getIngredientsByName(ingredient)));
+    ingredients.forEach(
+      async ({ ingredient }) => await dispatch(getIngredientsWithSearch(ingredient)),
+    );
   };
 
-  const handleIngredientsScroll = (event: React.SyntheticEvent) => {
+  const handleIngredientsScroll = (event: React.SyntheticEvent) => () => {
     const listboxNode = event.currentTarget;
 
     if (listboxNode.scrollTop + listboxNode.clientHeight === listboxNode.scrollHeight) {
@@ -228,7 +232,7 @@ const MealForm = () => {
                     />
                   )}
                   ListboxProps={{
-                    onScroll: handleIngredientsScroll,
+                    onScroll: (e) => handleIngredientsScroll(e),
                   }}
                   disablePortal
                 />

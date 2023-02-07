@@ -79,18 +79,19 @@ export const getLatestIngredients = createAsyncThunk<void, NormalizedIngredient[
   },
 );
 
-export const getIngredientsByName = createAsyncThunk<string, NormalizedIngredient[]>(
+export const getIngredientsWithSearch = createAsyncThunk<string, NormalizedIngredient[]>(
   `${name}/getIngredientsByName`,
-  async (ingredientName, { dispatch, getState }) => {
+  async (search, { dispatch, getState }) => {
     const size = selectNamePageSize(getState());
     const pages = selectNamePages(getState());
-    const lastId = pages.at(-1)?.ingredients.at(-1);
+    const lastId = pages.at(-1)?.ingredients.at(-1)?.id;
     // @ts-expect-error
-    const ingredients = await service.getIngredientsByName(ingredientName, {
+    const ingredients = await service.getIngredientsWithSearch({
       page: {
         size,
         lastId,
       },
+      search,
     });
     const normalizedIngredients = normalizeIngredients(dispatch, ingredients);
 
@@ -130,7 +131,7 @@ const slice = createSlice({
           state.entities[ingredient.id] = ingredient;
         });
       })
-      .addCase(getIngredientsByName.fulfilled, (state, { payload }) => {
+      .addCase(getIngredientsWithSearch.fulfilled, (state, { payload }) => {
         const { options } = state.orders.name;
         const currentIndex = options.page.index - 1;
 
@@ -146,11 +147,14 @@ const slice = createSlice({
           ingredients: payload.map(({ id }) => id),
         };
       })
-      .addMatcher(isFulfilled(getIngredients, getLatestIngredients, getIngredientsByName), (state, { payload }) => {
-        payload.forEach((ingredient) => {
-          state.entities[ingredient.id] = ingredient;
-        });
-      });
+      .addMatcher(
+        isFulfilled(getIngredients, getLatestIngredients, getIngredientsWithSearch),
+        (state, { payload }) => {
+          payload.forEach((ingredient) => {
+            state.entities[ingredient.id] = ingredient;
+          });
+        },
+      );
   },
 });
 
