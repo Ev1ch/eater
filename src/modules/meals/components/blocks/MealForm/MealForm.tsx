@@ -22,7 +22,6 @@ import { selectAreasArray } from '#/areas/slice';
 import { selectTagsArray } from '#/tags/slice';
 import { selectCategoriesArray } from '#/categories/slice';
 import { AmountType } from '#/ingredients/domain';
-import * as service from '../../../service';
 import { useMount } from '#/utils/hooks';
 import {
   getIngredientsWithSearch,
@@ -34,6 +33,7 @@ import { Tag } from '#/tags/domain';
 import { Category } from '#/categories/domain';
 import { Area } from '#/areas/domain';
 import { FormIngredient } from '#/ingredients/domain/Ingredient';
+import * as service from '../../../service';
 
 interface FormValues {
   name: string;
