@@ -50,7 +50,7 @@ export default function FridgeSection() {
           {isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
         </IconButton>
       </Paper>
-      <Fridge sx={{}} />
+      <Fridge sx={{ height: '100%' }} />
     </Grid>
   );
 }
