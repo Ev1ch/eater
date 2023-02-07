@@ -1,21 +1,26 @@
-import { useTranslation } from '#/localization/hooks';
-
 import wrapper from '@/store';
 import { getT } from '#/localization/utils';
-import '@/environment/client';
+import { Home as HomePage } from '#/meals/pages';
+import { getCurrentUser } from '#/user/slice';
+import { getLatestMeals } from '#/meals/slice';
 
 export default function Home() {
-  const { t } = useTranslation();
-  return <>{t('common:company.name')}</>;
+  return <HomePage />;
 }
 
-export const getStaticProps = wrapper.getStaticProps(() => async ({ locale }) => {
-  const t = await getT(locale, ['pages/home']);
-  const title = t('pages/home:meta.title');
+export const getServerSideProps = wrapper.getServerSideProps(
+  ({ dispatch }) =>
+    async ({ locale }) => {
+      const t = await getT(locale, ['pages/home']);
+      const title = t('pages/home:meta.title');
 
-  return {
-    props: {
-      title,
+      await dispatch(getCurrentUser()).unwrap();
+      await dispatch(getLatestMeals()).unwrap();
+
+      return {
+        props: {
+          title,
+        },
+      };
     },
-  };
-});
+);

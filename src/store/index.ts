@@ -4,14 +4,26 @@ import { createWrapper } from 'next-redux-wrapper';
 import environment from '@/environment/client';
 import fridgeReducer from '#/fridge/slice';
 import uiReducer from '#/ui/slice';
-// import mealsReducer from '#/meals/slice';
+import areasReducer from '#/areas/slice';
+import categoriesReducer from '#/categories/slice';
+import ingredientTypesReducer from '#/ingredient-types/slice';
+import ingredientsReducer from '#/ingredients/slice';
+import tagsReducer from '#/tags/slice';
+import mealsReducer from '#/meals/slice';
+import userReducer from '#/user/slice';
 
 export const createStore = () =>
   configureStore({
     reducer: {
       ui: uiReducer,
-      // meals: mealsReducer,
       fridge: fridgeReducer,
+      areas: areasReducer,
+      categories: categoriesReducer,
+      ingredientTypes: ingredientTypesReducer,
+      ingredients: ingredientsReducer,
+      tags: tagsReducer,
+      meals: mealsReducer,
+      user: userReducer,
     },
     devTools: environment.isDevelopment,
   });

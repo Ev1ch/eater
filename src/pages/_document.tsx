@@ -6,6 +6,7 @@ export default class Document extends NextDocument {
     return (
       <Html lang={this.props.locale}>
         <Head>
+          <meta name="description" content="Meals and fridges website" />
           <meta name="emotion-insertion-point" content="" />
           {(this.props as any).emotionStyleTags}
         </Head>
@@ -49,6 +50,7 @@ Document.getInitialProps = async (ctx) => {
   const cache = createCache();
   const { extractCriticalToChunks } = createServer(cache);
 
+  // eslint-disable-next-line no-param-reassign
   ctx.renderPage = () =>
     originalRenderPage({
       enhanceApp: (App: any) =>

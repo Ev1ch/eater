@@ -1,4 +1,4 @@
-import environment from '@/environment/server';
+import environment from '@/environment/client';
 import { initializeApp } from 'firebase/app';
 
 const firebaseConfig = {
