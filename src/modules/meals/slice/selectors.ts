@@ -128,24 +128,22 @@ export const selectAllLatestPagesToCurrent = createSelector(
   (pages, index) => pages.slice(0, index),
 );
 
-export const selectCanBeCookedHasMore = createSelector(
-  [selectCanBeCookedNormalizedPages, selectCanBeCookedPageSize],
-  (pages, size) => {
-    if (!pages.length) {
-      return true;
-    }
+export const selectCanBeCookedHasMore = (state: State) => {
+  const pages = selectCanBeCookedNormalizedPages(state);
+  const size = selectCanBeCookedPageSize(state);
+  if (!pages.length) {
+    return true;
+  }
 
-    return pages.at(-1)!.meals.length === size;
-  },
-);
+  return pages.at(-1)!.meals.length === size;
+};
 
-export const selectLatestHasMore = createSelector(
-  [selectCanBeCookedNormalizedPages, selectLatestPageSize],
-  (pages, size) => {
-    if (!pages.length) {
-      return true;
-    }
+export const selectLatestHasMore = (state: State) => {
+  const pages = selectLatestNormalizedPages(state);
+  const size = selectLatestPageSize(state);
+  if (!pages.length) {
+    return true;
+  }
 
-    return pages.at(-1)!.meals.length === size;
-  },
-);
+  return pages.at(-1)!.meals.length === size;
+};
