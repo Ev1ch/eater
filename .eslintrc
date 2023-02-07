@@ -27,7 +27,13 @@
       }
     ],
     "function-paren-newline": "off",
-    "react/jsx-one-expression-per-line": "off"
+    "react/jsx-one-expression-per-line": "off",
+    "react/jsx-props-no-spreading": "off",
+    "consistent-return": "off",
+    "import/no-cycle": "off",
+    "@typescript-eslint/no-shadow": "off",
+    "react/no-array-index-key": "off",
+    "react-hooks/exhaustive-deps": "off"
   },
   "overrides": [
     {

@@ -4,5 +4,5 @@ export const actionsTypePrefixes = {
   getCurrentUser: `${name}/getCurrentUser`,
   initAuth: `${name}/initAuth`,
   signInWithPopup: `${name}/signInWithPopup`,
-    signOut: `${name}/signOut`
+    signOut: `${name}/signOut`,
 };

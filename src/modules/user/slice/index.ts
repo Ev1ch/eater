@@ -4,10 +4,10 @@ import { createSlice } from '@reduxjs/toolkit';
 import { hydrate } from '@/store/actions';
 import { createAsyncThunk } from '@/store/creators';
 import { getFridge, setFridge } from '#/fridge/slice';
+import { selectIsSignInPending } from '#/user/slice/selectors';
 import { name, actionsTypePrefixes } from '../constants';
 import * as service from '../service';
 import type { User } from '../domain';
-import { selectIsSignInPending } from '#/user/slice/selectors';
 
 interface UserSlice {
   entity: User | null;

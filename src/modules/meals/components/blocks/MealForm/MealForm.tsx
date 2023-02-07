@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { debounce } from '@mui/material';
 
 import {
@@ -23,9 +23,6 @@ import { selectTagsArray } from '#/tags/slice';
 import { selectCategoriesArray } from '#/categories/slice';
 import { AmountType } from '#/ingredients/domain';
 import * as service from '../../../service';
-import { Tag } from '#/tags/domain';
-import { Category } from '#/categories/domain';
-import { Area } from '#/areas/domain';
 import { useMount } from '#/utils/hooks';
 import {
   getIngredientsWithSearch,
@@ -33,6 +30,10 @@ import {
   setNameNextPageIndex,
 } from '#/ingredients/slice';
 import useDispatch from '@/store/hooks/useDispatch';
+import { Tag } from '#/tags/domain';
+import { Category } from '#/categories/domain';
+import { Area } from '#/areas/domain';
+import { FormIngredient } from '#/ingredients/domain/Ingredient';
 
 interface FormValues {
   name: string;
@@ -40,16 +41,13 @@ interface FormValues {
   category: Category | null;
   tags: Tag[];
   instructions: Record<'text', string>[];
-  ingredients: {
-    ingredient: string;
-    amount: { type: AmountType; value: string };
-  }[];
+  ingredients: FormIngredient[];
 }
 
 const defaultIngredientValue = { ingredient: '', amount: { type: DEFAULT_AMOUNT_TYPE, value: '' } };
 const defaultInstructionValue = { text: '' };
 
-const defaultValues = {
+const defaultValues: FormValues = {
   name: '',
   area: null,
   category: null,
@@ -58,7 +56,7 @@ const defaultValues = {
   ingredients: [defaultIngredientValue],
 };
 
-const MealForm = () => {
+function MealForm() {
   const dispatch = useDispatch();
   const {
     register,
@@ -118,6 +116,7 @@ const MealForm = () => {
         ) => {
           const ingredientId = ingredients.find(({ name }) => name === ingredient)!.id;
 
+          // eslint-disable-next-line no-param-reassign
           accumulator = [
             ...accumulator,
             {
@@ -158,7 +157,7 @@ const MealForm = () => {
     const ingredients = getValues('ingredients');
     dispatch(setNameNextPageIndex());
     ingredients.forEach(
-      async ({ ingredient }) => await dispatch(getIngredientsWithSearch(ingredient)),
+      async ({ ingredient }) => dispatch(getIngredientsWithSearch(ingredient)),
     );
   };
 
@@ -172,6 +171,7 @@ const MealForm = () => {
 
   useEffect(() => {
     watch(({ ingredients }) => {
+      // @ts-ignore
       ingredients!.forEach(({ ingredient }) => {
         debouncedIngredientNameChangeHandler(ingredient!);
       });
@@ -385,6 +385,6 @@ const MealForm = () => {
       </Button>
     </Box>
   );
-};
+}
 
 export default MealForm;
